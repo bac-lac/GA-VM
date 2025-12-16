@@ -13,9 +13,6 @@ The following environment variables are used to control the application at run-t
 > ADMIN_DB_PASSWORD *: The DB password for the admin account.
 - Default value: ADMIN_DB_PASSWORD
 
-> ALB_NAME *: The name of the application load balancer.
-- Default value: ga-alb
-
 > CERT_BODY *: The certificate body.
 - Default value: CERT_BODY
 

@@ -19,12 +19,6 @@ variable "ADMIN_DB_USERNAME" {
   default = "ADMIN_DB_USERNAME"
 }
 
-variable "ALB_NAME" {
-  type = string
-  description = "The name of the application load balancer."
-  default = "ga-alb"
-}
-
 variable "CERT_BODY" {
   type = string
   sensitive = true  

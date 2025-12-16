@@ -1,5 +1,5 @@
 data "aws_lb" "ga_alb"{
-  name = "${var.ALB_NAME}"
+  name = "ga-alb-${var.ENV}"
 }
 
 resource "aws_lb_listener" "https" {
@@ -97,7 +97,7 @@ resource "aws_lb_target_group" "ga_tg_8443" {
   health_check {
     path      = "/"
     matcher   = "200,302"
-    port      = var.BRANCH_NAME == "main" ? 8443 : 8001
+    port      = 8443
     protocol  = "HTTPS"
   }
   stickiness {
@@ -133,7 +133,7 @@ resource "aws_lb_target_group" "ga_tg_22" {
   target_type = "ip"
   vpc_id      = data.aws_vpc.vpc.id
   health_check {
-    port      = var.BRANCH_NAME == "main" ? 8022 : 8001
+    port      = 8022
     protocol  = "TCP"
   }
   tags = {
