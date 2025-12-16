@@ -1,4 +1,0 @@
-skip-check:
-  - CKV_AWS_24    # Ensure no security groups allow ingress from 0.0.0.0:0 to port 22
-  - CKV_AWS_131   # Ensure that ALB drops HTTP headers
-  - CKV_AWS_91    # Ensure the ELBv2 (Application/Network) has access logging enabled

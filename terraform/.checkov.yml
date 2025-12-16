@@ -14,7 +14,3 @@ skip-check:
     - CKV2_AWS_61   # Ensure that an S3 bucket has a lifecycle configuration
     - CKV2_AWS_62   # Ensure S3 buckets should have event notifications enabled
     - CKV2_AWS_62   # Ensure S3 buckets should have event notifications enabled
-    - CKV_AWS_272   # Ensure AWS Lambda function is configured to validate code-signing
-    - CKV_AWS_115   # Ensure that AWS Lambda function is configured for function-level concurrent execution limit
-    - CKV_AWS_116   # Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)
-    - CKV_AWS_117   # Ensure that AWS Lambda function is configured inside a VPC

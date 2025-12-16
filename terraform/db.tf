@@ -1,5 +1,5 @@
 resource "aws_db_subnet_group" "data" {
-  name       = "ga-db-subnet-group-${var.BRANCH_ENV}"
+  name       = "ga-db-subnet-group-${var.ENV}"
   subnet_ids = data.aws_subnets.data.ids
 }
 
@@ -9,12 +9,12 @@ resource "aws_db_instance" "ga_mysql" {
   auto_minor_version_upgrade      = true
   backup_retention_period         = 35
   copy_tags_to_snapshot           = true
-  db_name                         = format("GA%s", replace("${var.BRANCH_ENV}", "-", ""))
+  db_name                         = format("GA%s", replace("${var.ENV}", "-", ""))
   db_subnet_group_name            = aws_db_subnet_group.data.name
   enabled_cloudwatch_logs_exports = ["audit", "general", "error", "slowquery"]
   engine                          = "mysql"
   engine_version                  = "8.0"
-  identifier                      = "ga-db-${var.BRANCH_ENV}"
+  identifier                      = "ga-db-${var.ENV}"
   instance_class                  = var.DB_INSTANCE_CLASS
   monitoring_interval             = 5
   monitoring_role_arn             = aws_iam_role.ga_rds_monitoring_role.arn

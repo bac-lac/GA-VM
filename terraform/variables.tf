@@ -25,18 +25,6 @@ variable "ALB_NAME" {
   default = "ga-alb"
 }
 
-variable "BRANCH_ENV" {
-  type = string
-  description = "The branch or environment based on the branch value."
-  default = "branchenv"
-}
-
-variable "BRANCH_NAME" {
-  type = string
-  description = "The branch name used for resources creation."
-  default = "main"
-}
-
 variable "CERT_BODY" {
   type = string
   sensitive = true  
@@ -90,12 +78,6 @@ variable "DB_USERNAME" {
   default = "DB_USERNAME"
 }
 
-variable "ECR_IMAGE" {
-  type = string
-  description = "The image name used for task definition."
-  default = "ECR_IMAGE"
-}
-
 variable "ENV" {
   type = string
   description = "The environment in which to deploy the solution."
@@ -109,28 +91,10 @@ variable "EXTERNAL_ID" {
   default = "EXTERNAL_ID"
 }
 
-variable "FORCE_REFRESH" {
-  type = string
-  description = "If set to true, this will start the application with an empty database."
-  default = "FALSE"
-}
-
-variable "FRESH_INSTALL" {
-  type = string
-  description = "If set to TRUE, it will do a fresh install of the filesystem."
-  default = "FALSE"
-}
-
 variable "MFT_CLUSTER" {
   type = string
   description = "If set to true, this will start the application in cluster mode."
   default = "TRUE"
-}
-
-variable "NLB_NAME" {
-  type = string
-  description = "The name of the network load balancer."
-  default = "ga-nlb"
 }
 
 variable "ROLE_ARN" {
@@ -138,16 +102,4 @@ variable "ROLE_ARN" {
   sensitive = true
   description = "ARN of the role used by terraform."
   default = "ARN"
-}
-
-variable "TASK_DEFINITION_CPU" {
-  type = number
-  description = "The task definition CPU."
-  default = 1024
-}
-
-variable "TASK_DEFINITION_MEMORY" {
-  type = number
-  description = "The task definition memory."
-  default = 3072
 }

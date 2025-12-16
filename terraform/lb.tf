@@ -27,11 +27,11 @@ resource "aws_lb_listener_rule" "admin_rule" {
   }
   condition {
     host_header {
-      values          = [var.BRANCH_NAME == "main" ? "goanywhere-${var.ENV}.bac-lac.gc.ca" : "${var.BRANCH_NAME}.goanywhere-dev.bac-lac.gc.ca"]
+      values          = ["goanywhere-${var.ENV}.bac-lac.gc.ca"]
     }
   }
   tags = {
-    Name = "Admin-${var.BRANCH_ENV}"
+    Name = "Admin-${var.ENV}"
   }
 }
 
@@ -43,11 +43,11 @@ resource "aws_lb_listener_rule" "admin_internal_rule" {
   }
   condition {
     host_header {
-      values          = [var.BRANCH_NAME == "main" ? "ga-${var.ENV}-internal.bac-lac.gc.ca" : "${var.BRANCH_NAME}.ga-dev-internal.bac-lac.gc.ca"]
+      values          = ["ga-${var.ENV}-internal.bac-lac.gc.ca"]
     }
   }
   tags = {
-    Name = "Admin-Internal-${var.BRANCH_ENV}"
+    Name = "Admin-Internal-${var.ENV}"
   }
 }
 
@@ -59,16 +59,16 @@ resource "aws_lb_listener_rule" "web_client_rule" {
   }
   condition {
     host_header {
-      values          = [var.BRANCH_NAME == "main" ? "transfert-transfer-${var.ENV}.bac-lac.gc.ca" : "${var.BRANCH_NAME}.transfert-transfer-dev.bac-lac.gc.ca"]
+      values          = ["transfert-transfer-${var.ENV}.bac-lac.gc.ca"]
     }
   }
   tags = {
-    Name = "Web-Client-${var.BRANCH_ENV}"
+    Name = "Web-Client-${var.ENV}"
   }
 }
 
 resource "aws_lb_target_group" "ga_tg_443" {
-  name        = "ga-tg-${var.BRANCH_ENV}-443"
+  name        = "ga-tg-${var.ENV}-443"
   port        = 443
   protocol    = "HTTPS"
   target_type = "ip"
@@ -84,12 +84,12 @@ resource "aws_lb_target_group" "ga_tg_443" {
     type      = "lb_cookie"
   }
   tags = {
-    Name = "Admin-${var.BRANCH_ENV}"
+    Name = "Admin-${var.ENV}"
   }
 }
 
 resource "aws_lb_target_group" "ga_tg_8443" {
-  name        = "ga-tg-${var.BRANCH_ENV}-8443"
+  name        = "ga-tg-${var.ENV}-8443"
   port        = 8443
   protocol    = "HTTPS"
   target_type = "ip"
@@ -105,12 +105,12 @@ resource "aws_lb_target_group" "ga_tg_8443" {
     type      = "lb_cookie"
   }
   tags = {
-    Name = "Web-client-${var.BRANCH_ENV}"
+    Name = "Web-client-${var.ENV}"
   }
 }
 
 data "aws_lb" "ga_nlb"{
-  name = "${var.NLB_NAME}"
+  name = "ga-nlb-${var.ENV}"
 }
 
 resource "aws_lb_listener" "sftp" {
@@ -122,12 +122,12 @@ resource "aws_lb_listener" "sftp" {
     target_group_arn  = aws_lb_target_group.ga_tg_22.arn
   }
   tags = {
-    Name = "SFTP-${var.BRANCH_ENV}"
+    Name = "SFTP-${var.ENV}"
   }
 }
 
 resource "aws_lb_target_group" "ga_tg_22" {
-  name        = "ga-tg-${var.BRANCH_ENV}-22"
+  name        = "ga-tg-${var.ENV}-22"
   port        = 22
   protocol    = "TCP"
   target_type = "ip"
@@ -137,6 +137,6 @@ resource "aws_lb_target_group" "ga_tg_22" {
     protocol  = "TCP"
   }
   tags = {
-    Name = "SFTP-${var.BRANCH_ENV}"
+    Name = "SFTP-${var.ENV}"
   }
 }

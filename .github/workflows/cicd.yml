@@ -1,15 +1,13 @@
 name: CI/CD
 
 on:
-  push:
-    branches: [ "main" ]
-
   workflow_dispatch:
     inputs:
       environment:
         type: choice
         description: "Name of the environment to deploy"
         options:
+        - pr
         - dev
         - pre-prod
         - prod
@@ -25,89 +23,24 @@ permissions:
       actions: write
 
 jobs:
-  Changed-files:
-    runs-on: ubuntu-latest
-    name: Check core files for changes
-    steps:
-      - uses: actions/checkout@v4
-      - name: Get changed files in the core folder
-        id: changed-files-specific
-        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62
-        with:
-          since_last_remote_commit: true
-          files: |
-            terraform/core/**
-            .github/workflows/deploy_core.yml
-
-      - name: Run step if any file(s) in the core folder change
-        if: steps.changed-files-specific.outputs.any_changed == 'true'
-        env:
-          ALL_CHANGED_FILES: ${{ steps.changed-files-specific.outputs.all_changed_files }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "One or more files in the core folder has changed."
-          echo "List all the files that have changed: $ALL_CHANGED_FILES"
-          gh run cancel ${{ github.run_id }}
-
   Code-check:
-    needs: Changed-files
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Run shellcheck
-        uses: sudo-bot/action-shellcheck@latest
-        with:
-          cli-args: "./docker/scripts/*.sh"
       
       - name: Checkov security scan
         uses: bridgecrewio/checkov-action@v12
         with:
-          directory: terraform/workload
+          directory: terraform
           output_format: cli
-
-  Build:
+  Deploy:
     needs: Code-check
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment == '' && 'dev' || inputs.environment }}
-    outputs:
-      ecr_image: ${{ steps.login-ecr.outputs.registry }}/${{ env.IMAGE_REPO_TAG }}@${{ steps.build-push.outputs.digest }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_GITHUB_DEVOPS_ROLE }}
-          role-session-name: GitHub_to_AWS_via_FederatedOIDC
-          aws-region: ${{ env.AWS_REGION }}
-          role-skip-session-tagging: true
-          audience: sts.amazonaws.com
-
-      - name: Login to Amazon ECR
-        if: ${{ vars.ENV == 'dev' }}
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Build and push
-        if: ${{ vars.ENV == 'dev' }}
-        id: build-push
-        uses: docker/build-push-action@v6
-        with:
-          context: ./
-          file: ./docker/Dockerfile
-          push: true
-          tags: ${{ steps.login-ecr.outputs.registry }}/${{ env.IMAGE_REPO_TAG }}
-
-  Deploy:
-    needs: Build
-    runs-on: ubuntu-latest
-    environment: ${{ inputs.environment == '' && 'dev' || inputs.environment }}
+    environment: ${{ inputs.environment }}
     defaults:
       run:
-        working-directory: ./terraform/workload
+        working-directory: ./terraform
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -126,12 +59,6 @@ jobs:
         with:
           secrets: ${{ toJSON(secrets) }}
           vars: ${{ toJSON(vars) }}
-            
-      - name: Add Dynamic Variables to tfvars
-        run: |
-          echo 'BRANCH_ENV = "${{ env.BRANCH_NAME == 'main' && vars.ENV || env.BRANCH_NAME }}"' >> pipeline.auto.tfvars
-          echo 'BRANCH_NAME = "${{ env.BRANCH_NAME }}"' >> pipeline.auto.tfvars
-          echo 'ECR_IMAGE = "${{ needs.Build.outputs.ecr_image }}"' >> pipeline.auto.tfvars
 
       - name: Terraform-Setup
         id: Setup
@@ -143,8 +70,8 @@ jobs:
         id: Init
         run: terraform init 
           -backend-config="dynamodb_table=main-tfstate-lock-1a6f390e" 
-          -backend-config="key=${{ vars.ENV }}/${{ env.BRANCH_NAME }}/terraform.tfstate"
+          -backend-config="key=${{ inputs.environment }}/ga-vm/terraform.tfstate"
 
       - name: Terraform-Apply
         id: Apply
-        run: terraform apply -var-file="pipeline.auto.tfvars" -var="CERT_BODY=${{ secrets.CERT_BODY }}" -var="CERT_CHAIN=${{ secrets.CERT_CHAIN }}" -var="CERT_PRIVATE_KEY=${{ secrets.CERT_PRIVATE_KEY }}" -auto-approve
+        run: terraform apply -var-file="pipeline.auto.tfvars" -var="ENV=${{ inputs.environment }}" -var="CERT_BODY=${{ secrets.CERT_BODY }}" -var="CERT_CHAIN=${{ secrets.CERT_CHAIN }}" -var="CERT_PRIVATE_KEY=${{ secrets.CERT_PRIVATE_KEY }}" -auto-approve
