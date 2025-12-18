@@ -18,6 +18,7 @@ resource "aws_instance" "app" {
   instance_type               = "r6i.large"
   key_name                    = "keypair"
   vpc_security_group_ids      = [data.aws_security_group.app.id]
+  subnet_id                   = element(data.aws_subnets.app.ids, count.index)
   get_password_data           = true
   user_data                   = local.windows_user_data
   monitoring                  = true
