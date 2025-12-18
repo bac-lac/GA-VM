@@ -55,7 +55,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_db_drive_alarm" {
   alarm_description         = "This metric monitors RDS ${var.ENV} drive usage reaching 90%"
 }
 
-resource "aws_cloudwatch_metric_alarm" "ga_cw_nlb_22_alarm" {
+/* resource "aws_cloudwatch_metric_alarm" "ga_cw_nlb_22_alarm" {
   alarm_name                = "NLB port 22 ${var.ENV} unhealthy host"
   comparison_operator       = "LessThanThreshold"
   alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
@@ -104,4 +104,4 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_alb_8443_alarm" {
   threshold                 = 1
   treat_missing_data        = "missing"
   alarm_description         = "This metric monitors ALB port 8443 ${var.ENV} health"
-}
+} */
