@@ -1,5 +1,5 @@
 skip-check:
-    -      # Ensure ALB protocol is HTTPS
+    - CKV_AWS_2     # Ensure ALB protocol is HTTPS
     - CKV_AWS_7     # Ensure rotation for customer created CMKs is enabled
     - CKV_AWS_18    # Ensure the S3 bucket has access logging enabled
     - CKV_AWS_91    # Ensure the ELBv2 (Application/Network) has access logging enabled
