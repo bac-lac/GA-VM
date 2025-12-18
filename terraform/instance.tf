@@ -21,6 +21,7 @@ resource "aws_instance" "app" {
   get_password_data           = true
   user_data                   = local.windows_user_data
   monitoring                  = true
+  ebs_optimized               = true
   tags = {
     Name = "MFT-${count.index + 1}"
     OS   = "WindowsServer"
