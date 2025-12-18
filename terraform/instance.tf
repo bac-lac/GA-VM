@@ -24,6 +24,9 @@ resource "aws_instance" "app" {
     Name = "MFT-${count.index + 1}"
     OS   = "WindowsServer"
   }
+  metadata_options {
+    http_endpoint = "disabled"
+  }
 }
 
 
