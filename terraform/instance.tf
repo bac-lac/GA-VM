@@ -19,7 +19,7 @@ resource "aws_instance" "app" {
   key_name                    = "keypair"
   vpc_security_group_ids      = [data.aws_security_group.app.id]
   subnet_id                   = element(data.aws_subnets.app.ids, count.index)
-  #get_password_data           = true
+  get_password_data           = false
   user_data                   = local.windows_user_data
   monitoring                  = true
   ebs_optimized               = true
