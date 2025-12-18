@@ -20,6 +20,7 @@ resource "aws_instance" "app" {
   vpc_security_group_ids      = [data.aws_security_group.app.id]
   get_password_data           = true
   user_data                   = local.windows_user_data
+  monitoring                  = true
   tags = {
     Name = "MFT-${count.index + 1}"
     OS   = "WindowsServer"
