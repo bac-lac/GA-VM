@@ -29,7 +29,7 @@ resource "aws_instance" "app" {
     OS   = "WindowsServer"
   }
   metadata_options {
-    http_endpoint = "disabled"
+    http_endpoint = "enabled"
     http_tokens   = "required"
   }
 }
