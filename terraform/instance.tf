@@ -23,6 +23,7 @@ resource "aws_instance" "app" {
   user_data                   = local.windows_user_data
   monitoring                  = true
   ebs_optimized               = true
+  iam_instance_profile        = aws_iam_instance_profile.ssm_profile.name
   tags = {
     Name = "MFT-${count.index + 1}"
     OS   = "WindowsServer"
