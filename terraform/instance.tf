@@ -16,7 +16,7 @@ resource "aws_instance" "app" {
   count                       = 2
   ami                         = data.aws_ami.windows.id
   instance_type               = "r6i.large"
-  key_name                    = "keypair"
+  key_name                    = aws_key_pair.instance_key.key_name
   vpc_security_group_ids      = [data.aws_security_group.app.id]
   subnet_id                   = element(data.aws_subnets.app.ids, count.index)
   get_password_data           = true
