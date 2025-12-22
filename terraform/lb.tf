@@ -58,7 +58,7 @@ resource "aws_lb_listener" "https" {
   }
 }
 
-/*resource "aws_lb_listener_rule" "admin_rule" {
+resource "aws_lb_listener_rule" "admin_rule" {
   listener_arn        = aws_lb_listener.https.arn
   action {
     type              = "forward"
@@ -73,6 +73,36 @@ resource "aws_lb_listener" "https" {
     Name = "Admin-${var.ENV}"
   }
 }
+
+resource "aws_lb_target_group" "ga_tg_443" {
+  name        = "ga-tg-${var.ENV}-443"
+  port        = 443
+  protocol    = "HTTPS"
+  target_type = "instance"
+  vpc_id      = data.aws_vpc.vpc.id
+  health_check {
+    path      = "/"
+    matcher   = "200,302"
+    port      = 8001
+    protocol  = "HTTPS"
+  }
+  stickiness {
+    enabled   = true
+    type      = "lb_cookie"
+  }
+  tags = {
+    Name = "Admin-${var.ENV}"
+  }
+}
+
+resource "aws_lb_target_group_attachment" "tga_443" {
+  count            = 2
+  target_group_arn = aws_lb_target_group.ga_tg_443.arn
+  target_id        = aws_instance.app[count.index].id
+  port             = 443
+}
+
+/*
 
 resource "aws_lb_listener_rule" "admin_internal_rule" {
   listener_arn        = aws_lb_listener.https.arn
