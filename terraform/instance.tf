@@ -30,6 +30,7 @@ resource "aws_instance" "app" {
   }
   metadata_options {
     http_endpoint = "disabled"
+    http_tokens   = "required"
   }
 }
 
