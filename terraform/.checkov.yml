@@ -14,6 +14,5 @@ skip-check:
     - CKV2_AWS_61   # Ensure that an S3 bucket has a lifecycle configuration
     - CKV2_AWS_62   # Ensure S3 buckets should have event notifications enabled
     - CKV2_AWS_62   # Ensure S3 buckets should have event notifications enabled
-    - CKV_AWS_2     # Ensure ALB protocol is HTTPS
     - CKV_AWS_103   # Ensure that load balancer is using at least TLS 1.2
     - CKV_AWS_8     # Ensure all data stored in the Launch configuration or instance Elastic Blocks Store is securely encrypted
