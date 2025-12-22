@@ -1,4 +1,3 @@
-
 data "aws_ami" "windows" {
   most_recent = true
   owners      = ["amazon"]
@@ -48,7 +47,7 @@ locals {
       $instanceId = Write-Output $object.instanceId
 
       # Write a simple page
-      $content = "<html><body><h1>Hello from $instanceId</h1><p>IIS on Windows Server</p></body></html>"
+      $content = "<html><body><h1>Hello from $instanceId</h1><p>IIS on Windows Server v2</p></body></html>"
       $path = "C:\\inetpub\\wwwroot\\Default.htm"
       Set-Content -Path $path -Value $content -Encoding UTF8
 
