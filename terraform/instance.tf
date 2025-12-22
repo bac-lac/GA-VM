@@ -31,8 +31,10 @@ resource "aws_instance" "app" {
     http_endpoint = "enabled"
     http_tokens   = "required"
   }
+  root_block_device {
+    encrypted     = true
+  }
 }
-
 
 locals {
   windows_user_data = <<-EOF
