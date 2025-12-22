@@ -146,27 +146,6 @@ resource "aws_lb_target_group_attachment" "tga_8443" {
   port             = 8443
 }
 
-/*
-
-resource "aws_lb_listener_rule" "admin_internal_rule" {
-  listener_arn        = aws_lb_listener.https.arn
-  action {
-    type              = "forward"
-    target_group_arn  = aws_lb_target_group.ga_tg_443.arn
-  }
-  condition {
-    host_header {
-      values          = ["ga-${var.ENV}-internal.bac-lac.gc.ca"]
-    }
-  }
-  tags = {
-    Name = "Admin-Internal-${var.ENV}"
-  }
-}
-
-
-
-
 data "aws_lb" "ga_nlb"{
   name = "ga-nlb-${var.ENV}"
 }
@@ -188,7 +167,7 @@ resource "aws_lb_target_group" "ga_tg_22" {
   name        = "ga-tg-${var.ENV}-22"
   port        = 22
   protocol    = "TCP"
-  target_type = "ip"
+  target_type = "instance"
   vpc_id      = data.aws_vpc.vpc.id
   health_check {
     port      = 8022
@@ -197,4 +176,11 @@ resource "aws_lb_target_group" "ga_tg_22" {
   tags = {
     Name = "SFTP-${var.ENV}"
   }
-} */
+}
+
+resource "aws_lb_target_group_attachment" "tga_22" {
+  count            = 2
+  target_group_arn = aws_lb_target_group.ga_tg_22.arn
+  target_id        = aws_instance.app[count.index].id
+  port             = 22
+}
