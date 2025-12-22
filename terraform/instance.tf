@@ -42,7 +42,10 @@ locals {
       Install-WindowsFeature -Name Web-Server -IncludeManagementTools
 
       # Get EC2 instance ID
-      $instanceId = (Invoke-WebRequest -UseBasicParsing -Uri http://169.254.169.254/latest/meta-data/instance-id).Content
+      [string]$token = (Invoke-WebRequest -Headers @{'X-aws-ec2-metadata-token-ttl-seconds' = '21600'} ` -Method PUT -Uri 'http://169.254.169.254/latest/api/token' -UseBasicParsing).Content
+      $jsonString = (Invoke-WebRequest -Headers @{'X-aws-ec2-metadata-token' = $token} ` -Uri 'http://169.254.169.254/latest/dynamic/instance-identity/document' -UseBasicParsing).Content
+      $object = $jsonString | ConvertFrom-Json
+      $instanceId = Write-Output $object.instanceId
 
       # Write a simple page
       $content = "<html><body><h1>Hello from $instanceId</h1><p>IIS on Windows Server</p></body></html>"
