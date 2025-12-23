@@ -20,3 +20,4 @@ resource "aws_ssm_association" "join_domain" {
     directoryUserName = "Admin"
     directoryPassword = var.DIRECTORY_ADMIN_PASSWORD
    }
+}
