@@ -6,6 +6,6 @@ resource "aws_directory_service_directory" "directory" {
 
   vpc_settings {
     vpc_id     = data.aws_vpc.vpc.id
-    subnet_ids = slice(data.aws_subnet.app.id, 0, 2)
+    subnet_ids = slice(data.aws_subnets.app.ids, 0, 2)
   }
 }
