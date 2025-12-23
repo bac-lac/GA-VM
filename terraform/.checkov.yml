@@ -1,6 +1,5 @@
 skip-check:
     - CKV_AWS_18    # Ensure the S3 bucket has access logging enabled
-    - CKV_AWS_144   # Ensure that S3 bucket has cross-region replication enabled
     - CKV_AWS_157   # Ensure that RDS instances have Multi-AZ enabled
     - CKV_AWS_354   # Ensure RDS Performance Insights are encrypted using KMS CMKs
     - CKV_AWS_378   # Ensure AWS Load Balancer doesn't use HTTP protocol
