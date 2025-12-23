@@ -18,6 +18,5 @@ resource "aws_ssm_association" "join_domain" {
     directoryName     = aws_directory_service_directory.directory.name
     dnsIpAddresses    = join(",", aws_directory_service_directory.directory.dns_ip_addresses)
     directoryUserName = "Admin"
-    directoryPassword = var.DIRECTORY_ADMIN_PASSWORD
    }
 }
