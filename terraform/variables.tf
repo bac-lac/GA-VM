@@ -72,6 +72,15 @@ variable "DB_USERNAME" {
   default = "DB_USERNAME"
 }
 
+
+variable "DIRECTORY_ADMIN_PASSWORD" {
+  type      = string
+  sensitive = true
+  description = "The admin password for the directory service."
+  default = "DIRECTORY_ADMIN_PASSWORD"
+}
+
+
 variable "ENV" {
   type = string
   description = "The environment in which to deploy the solution."
