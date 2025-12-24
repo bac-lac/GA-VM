@@ -12,7 +12,7 @@ data "aws_ami" "windows" {
 }
 
 resource "aws_instance" "app" {
-  count                       = 2
+  count                       = 3
   ami                         = data.aws_ami.windows.id
   instance_type               = "r6i.large"
   key_name                    = aws_key_pair.instance_key.key_name

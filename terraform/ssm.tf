@@ -10,7 +10,7 @@ resource "aws_ssm_association" "join_domain" {
   name        = "AWS-JoinDirectoryServiceDomain"
   targets {
     key    = "InstanceIds"
-    values = [aws_instance.app[0].id, aws_instance.app[1].id]
+    values = [aws_instance.app[0].id, aws_instance.app[1].id, aws_instance.app[2].id]
   }
 
   parameters = {
