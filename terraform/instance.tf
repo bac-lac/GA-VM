@@ -12,7 +12,7 @@ data "aws_ami" "windows" {
 }
 
 resource "aws_instance" "app" {
-  count                       = 3
+  count                       = upper(var.MFT_CLUSTER) == "TRUE" ? 2 : 1
   ami                         = data.aws_ami.windows.id
   instance_type               = "r6i.large"
   key_name                    = aws_key_pair.instance_key.key_name
@@ -34,28 +34,4 @@ resource "aws_instance" "app" {
   root_block_device {
     encrypted     = true
   }
-}
-
-locals {
-  windows_user_data = <<-EOF
-    <powershell>
-      # Enable IIS
-      Install-WindowsFeature -Name Web-Server -IncludeManagementTools
-
-      # Get EC2 instance ID
-      [string]$token = (Invoke-WebRequest -Headers @{'X-aws-ec2-metadata-token-ttl-seconds' = '21600'} ` -Method PUT -Uri 'http://169.254.169.254/latest/api/token' -UseBasicParsing).Content
-      $jsonString = (Invoke-WebRequest -Headers @{'X-aws-ec2-metadata-token' = $token} ` -Uri 'http://169.254.169.254/latest/dynamic/instance-identity/document' -UseBasicParsing).Content
-      $object = $jsonString | ConvertFrom-Json
-      $instanceId = Write-Output $object.instanceId
-
-      # Write a simple page
-      $content = "<html><body><h1>Hello from $instanceId</h1><p>IIS on Windows Server v2</p></body></html>"
-      $path = "C:\\inetpub\\wwwroot\\Default.htm"
-      Set-Content -Path $path -Value $content -Encoding UTF8
-
-      # Ensure IIS starts
-      Start-Service W3SVC
-      Set-Service -Name W3SVC -StartupType Automatic
-    </powershell>
-  EOF
 }
