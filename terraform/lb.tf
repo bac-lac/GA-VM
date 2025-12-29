@@ -185,6 +185,6 @@ resource "aws_lb_target_group_attachment" "tga_22" {
   port             = 22
 }
 
-local {
+locals {
   count = upper(var.MFT_CLUSTER) == "TRUE" ? 2 : 1
 }
