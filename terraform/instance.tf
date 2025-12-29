@@ -19,7 +19,6 @@ resource "aws_instance" "app" {
   vpc_security_group_ids      = [data.aws_security_group.app.id]
   subnet_id                   = element(data.aws_subnets.app.ids, count.index)
   get_password_data           = true
-  user_data                   = local.windows_user_data
   monitoring                  = true
   ebs_optimized               = true
   iam_instance_profile        = aws_iam_instance_profile.ssm_profile.name
