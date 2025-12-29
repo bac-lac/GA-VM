@@ -37,17 +37,26 @@ The following environment variables are used to control the application at run-t
 > DB_PASSWORD *: The DB password for the application.
 - Default value: DB_PASSWORD
 
+> DIRECTORY_ADMIN_PASSWORD *: The admin password for the directory service.
+- Default value: DIRECTORY_ADMIN_PASSWORD
+
 > ENV *: The environment in which to deploy the solution.
 - Default value: dev
-- Allowed values: dev, test or prod
+- Allowed values: pr, dev, test or prod
 
 > EXTERNAL_ID *: External ID of the automation account role.
 - Default value: EXTERNAL_ID
 
-> MFT_CLUSTER *: If set to true, this will start the application in cluster mode.
+> FSX_STORAGE_CAPACITY *: The storage capacity of the FSx file system in GB.
+- Default value: 32
+
+> FSX_THROUGHPUT_CAPACITY *: External ID of the automation account role.
+- Default value: 32
+
+> MFT_CLUSTER *: The throughput capacity of the FSx file system in MB/s.
 - Default value: TRUE
 
-> ROLE_ARN *: ARN of the role used by terraform..
+> ROLE_ARN *: ARN of the role used by terraform.
 - Default value: ROLE_ARN
 
 # Code Check

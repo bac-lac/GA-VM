@@ -72,14 +72,12 @@ variable "DB_USERNAME" {
   default = "DB_USERNAME"
 }
 
-
 variable "DIRECTORY_ADMIN_PASSWORD" {
   type      = string
   sensitive = true
   description = "The admin password for the directory service."
   default = "DIRECTORY_ADMIN_PASSWORD"
 }
-
 
 variable "ENV" {
   type = string
@@ -92,6 +90,18 @@ variable "EXTERNAL_ID" {
   sensitive = true
   description = "External ID of the automation account role."
   default = "EXTERNAL_ID"
+}
+
+variable "FSX_STORAGE_CAPACITY" {
+  type = number
+  description = "The storage capacity of the FSx file system in GB."
+  default = 32
+}
+
+variable "FSX_THROUGHPUT_CAPACITY" {
+  type = number
+  description = "The throughput capacity of the FSx file system in MB/s."
+  default = 32
 }
 
 variable "MFT_CLUSTER" {
