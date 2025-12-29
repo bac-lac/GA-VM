@@ -1,5 +1,6 @@
 resource "aws_sns_topic" "ga_sns_topic" {
   name = "GoAnywhere_${var.ENV}_Alarms_Topic"
+  kms_master_key_id = data.aws_kms_alias.sns.target_key_id
   delivery_policy = <<EOF
 {
   "http": {
