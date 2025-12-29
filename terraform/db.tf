@@ -18,6 +18,7 @@ resource "aws_db_instance" "ga_mysql" {
   iam_database_authentication_enabled = true
   identifier                          = "ga-db-${var.ENV}"
   instance_class                      = var.DB_INSTANCE_CLASS
+  maintenance_window                  = "sat:05:00-sat:06:00" 
   monitoring_interval                 = 5
   monitoring_role_arn                 = aws_iam_role.ga_rds_monitoring_role.arn
   parameter_group_name                = "default.mysql8.0"
