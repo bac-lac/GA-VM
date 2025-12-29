@@ -59,7 +59,7 @@ data "aws_iam_policy_document" "ga_sns_topic_access_policy" {
       identifiers  = ["cloudwatch.amazonaws.com"]
     }
     resources = [
-      data.aws_kms_alias.ga_kms_main.target_key_arn
+      data.aws_kms_alias.sns.target_key_arn
     ]
     sid = "Allow_Publish_Alarms"
   }
