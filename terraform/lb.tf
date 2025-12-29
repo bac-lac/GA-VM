@@ -35,7 +35,7 @@ resource "aws_lb_target_group" "tg" {
 }
 
 resource "aws_lb_target_group_attachment" "tga" {
-  count            = 2
+  count            = local.count
   target_group_arn = aws_lb_target_group.tg.arn
   target_id        = aws_instance.app[count.index].id
   port             = 80
@@ -96,7 +96,7 @@ resource "aws_lb_target_group" "ga_tg_443" {
 }
 
 resource "aws_lb_target_group_attachment" "tga_443" {
-  count            = 2
+  count            = local.count
   target_group_arn = aws_lb_target_group.ga_tg_443.arn
   target_id        = aws_instance.app[count.index].id
   port             = 443
@@ -140,7 +140,7 @@ resource "aws_lb_target_group" "ga_tg_8443" {
 }
 
 resource "aws_lb_target_group_attachment" "tga_8443" {
-  count            = 2
+  count            = local.count
   target_group_arn = aws_lb_target_group.ga_tg_8443.arn
   target_id        = aws_instance.app[count.index].id
   port             = 8443
@@ -179,8 +179,12 @@ resource "aws_lb_target_group" "ga_tg_22" {
 }
 
 resource "aws_lb_target_group_attachment" "tga_22" {
-  count            = 2
+  count            = local.count
   target_group_arn = aws_lb_target_group.ga_tg_22.arn
   target_id        = aws_instance.app[count.index].id
   port             = 22
+}
+
+local {
+  count = upper(var.MFT_CLUSTER) == "TRUE" ? 2 : 1
 }
