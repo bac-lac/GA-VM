@@ -16,6 +16,6 @@ resource "aws_ssm_association" "join_domain" {
   parameters = {
     directoryId       = aws_directory_service_directory.directory.id
     directoryName     = aws_directory_service_directory.directory.name
-    dnsIpAddresses    = [join(",", aws_directory_service_directory.directory.dns_ip_addresses)]
+    dnsIpAddresses    = [aws_directory_service_directory.directory.dns_ip_addresses[0], aws_directory_service_directory.directory.dns_ip_addresses[1]]
    }
 }
