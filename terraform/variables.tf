@@ -46,6 +46,18 @@ variable "CLOUDWATCH_EMAIL" {
   default = "cloudwatch_email@domain.com"
 }
 
+variable "DB_ALLOCATED_STORAGE" {
+  type = number
+  description = "The allocated storage for the database in GB."
+  default = 20
+}
+
+variable "DB_ENGINE_VERSION" {
+  type = string
+  description = "The database engine version for the application."
+  default = "8.4"
+}
+
 variable "DB_INSTANCE_CLASS" {
   type = string
   description = "The database intance class for the application."
@@ -102,6 +114,12 @@ variable "FSX_THROUGHPUT_CAPACITY" {
   type = number
   description = "The throughput capacity of the FSx file system in MB/s."
   default = 32
+}
+
+variable "INSTANCE_TYPE" {
+  type = string
+  description = "The instance type for the windows VM."
+  default = "r6i.large"
 }
 
 variable "MFT_CLUSTER" {

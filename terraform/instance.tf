@@ -14,7 +14,7 @@ data "aws_ami" "windows" {
 resource "aws_instance" "app" {
   count                       = upper(var.MFT_CLUSTER) == "TRUE" ? 2 : 1
   ami                         = data.aws_ami.windows.id
-  instance_type               = "r6i.large"
+  instance_type               = var.INSTANCE_TYPE
   key_name                    = aws_key_pair.instance_key.key_name
   vpc_security_group_ids      = [data.aws_security_group.app.id]
   subnet_id                   = element(data.aws_subnets.app.ids, count.index)
@@ -24,7 +24,6 @@ resource "aws_instance" "app" {
   iam_instance_profile        = aws_iam_instance_profile.ssm_profile.name
   tags = {
     Name = "MFT-${count.index + 1}"
-    OS   = "WindowsServer"
     PatchGroup = "${count.index + 1}"
   }
   metadata_options {

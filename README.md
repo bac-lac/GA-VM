@@ -25,6 +25,12 @@ The following environment variables are used to control the application at run-t
 > CLOUDWATCH_EMAIL *: The email used for cloudwatch endpoint.
 - Default value: cloudwatch_email@domain.com
 
+> DB_ALLOCATED_STORAGE *: The allocated storage for the database in GB.
+- Default value: 20
+
+> DB_ENGINE_VERSION *: The database engine version for the application.
+- Default value: 8.4
+
 > DB_INSTANCE_CLASS *: The database intance class for the application.
 - Default value: db.t3.medium
 
@@ -52,6 +58,9 @@ The following environment variables are used to control the application at run-t
 
 > FSX_THROUGHPUT_CAPACITY *: External ID of the automation account role.
 - Default value: 32
+
+> INSTANCE_TYPE *: The instance type for the windows VM.
+- Default value: r6i.large
 
 > MFT_CLUSTER *: The throughput capacity of the FSx file system in MB/s.
 - Default value: TRUE
