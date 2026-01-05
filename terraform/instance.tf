@@ -25,6 +25,7 @@ resource "aws_instance" "app" {
   tags = {
     Name = "MFT-${count.index + 1}"
     OS   = "WindowsServer"
+    PatchGroup = "${count.index + 1}"
   }
   metadata_options {
     http_endpoint = "enabled"

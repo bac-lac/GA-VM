@@ -91,3 +91,73 @@ resource "aws_iam_instance_profile" "ssm_profile" {
   name = "SSMInstanceProfile"
   role = aws_iam_role.ssm_role.name
 }
+
+##### SSM S3 bucket roles and policies #####
+data "aws_iam_policy_document" "patchpolicy_get_object" {
+  statement {
+    sid     = "AllowGetObjectFromQuickSetupPatchPolicyBuckets"
+    effect  = "Allow"
+
+    actions = [
+      "s3:GetObject",
+    ]
+
+    resources = [
+      "arn:aws:s3:::aws-quicksetup-patchpolicy-*/*",
+    ]
+  }
+}
+
+resource "aws_iam_policy" "s3_get_object_policy" {
+  name        = "aws-quicksetup-patchpolicy-baselineoverrides-s3"
+  description = "Allow GetObject on aws-quicksetup-patchpolicy-* buckets"
+  policy      = data.aws_iam_policy_document.patchpolicy_get_object.json
+}
+
+data "aws_iam_policy_document" "ssm_s3_permissions" {
+  version = "2012-10-17"
+
+  statement {
+    sid     = "AllowOnlySSMRolesToReadWrite"
+    effect  = "Allow"
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject"
+    ]
+
+    resources = [
+      "${aws_s3_bucket.ssm_s3.arn}/*"
+    ]
+
+    principals {
+      type        = "AWS"
+      identifiers = ["${aws_iam_role.ssm_role.arn}"]
+    }
+  }
+
+  statement {
+    sid       = "DenyInsecureTransport"
+    effect    = "Deny"
+    actions   = ["s3:*"]
+    resources = [
+      "${aws_s3_bucket.ssm_s3.arn}",
+      "${aws_s3_bucket.ssm_s3.arn}/*"
+    ]
+
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values   = ["false"]
+    }
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+  }
+}
+
+resource "aws_s3_bucket_policy" "ssm_s3_policy" {
+  bucket = aws_s3_bucket.ssm_s3.id
+  policy = data.aws_iam_policy_document.allow_access_from_cloudfront.json
+}
