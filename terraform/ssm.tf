@@ -28,7 +28,7 @@ resource "aws_ssm_patch_baseline" "patch_baseline" {
 
     patch_filter {
       key    = "MSRC_SEVERITY"
-      values = ["CRITICAL", "IMPORTANT"]
+      values = ["Critical", "Important"]
     }
     
     patch_filter {
