@@ -159,5 +159,5 @@ data "aws_iam_policy_document" "ssm_s3_permissions" {
 
 resource "aws_s3_bucket_policy" "ssm_s3_policy" {
   bucket = aws_s3_bucket.ssm_s3.id
-  policy = data.aws_iam_policy_document.allow_access_from_cloudfront.json
+  policy = data.aws_iam_policy_document.ssm_s3_permissions.json
 }

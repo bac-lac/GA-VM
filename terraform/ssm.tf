@@ -71,8 +71,8 @@ locals {
 resource "aws_ssmquicksetup_configuration_manager" "goanywhere_ssm" {
   count = 2
   
-  name        = "GoAnywhere-${var.ENV}-${index.count + 1}"
-  description = "Patchgroup ${index.count + 1}"
+  name        = "GoAnywhere-${var.ENV}-${count.index + 1}"
+  description = "Patchgroup ${count.index + 1}"
 
   configuration_definition {
     local_deployment_administration_role_arn = "arn:aws:iam::${var.ACCOUNT}:role/AWS-QuickSetup-PatchPolicy-LocalAdministrationRole"
@@ -81,7 +81,7 @@ resource "aws_ssmquicksetup_configuration_manager" "goanywhere_ssm" {
     type = "AWSQuickSetupType-PatchPolicy"
     parameters = {
       ConfigurationOptionsInstallNextInterval = "true"
-      ConfigurationOptionsInstallValue        = "cron(0 ${index.count + 4} ? * SAT#${locals.sat} *)"
+      ConfigurationOptionsInstallValue        = "cron(0 ${count.index + 4} ? * SAT#${local.sat} *)"
       ConfigurationOptionsPatchOperation      = "ScanAndInstall"
       ConfigurationOptionsScanNextInterval    = "false"
       ConfigurationOptionsScanValue           = "cron(00 23 * * ? *)"
@@ -90,11 +90,11 @@ resource "aws_ssmquicksetup_configuration_manager" "goanywhere_ssm" {
       OutputBucketRegion   = "ca-central-1"
       OutputLogEnableS3    = "true"
       OutputS3BucketName   = "${aws_s3_bucket.ssm_s3.id}"
-      OutputS3KeyPrefix    = "${var.ENV}-${index.count + 1}"
+      OutputS3KeyPrefix    = "${var.ENV}-${count.index + 1}"
 
       PatchBaselineRegion  = "ca-central-1"
       PatchBaselineUseDefault = "custom"
-      PatchPolicyName      = "GoAnywhere-${var.ENV}-${index.count + 1}"
+      PatchPolicyName      = "GoAnywhere-${var.ENV}-${count.index + 1}"
 
       RateControlConcurrency   = "100%"
       RateControlErrorThreshold = "33%"
@@ -106,7 +106,7 @@ resource "aws_ssmquicksetup_configuration_manager" "goanywhere_ssm" {
       TargetAccounts = "685264686784"
       TargetRegions  = "ca-central-1"
       TargetTagKey   = "PatchGroup"
-      TargetTagValue = "${index.count + 1}"
+      TargetTagValue = "${count.index + 1}"
       TargetType     = "Tags"
     }
   }
