@@ -2,7 +2,6 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_db_cpu_alarm" {
   alarm_name                = "MySQL ${var.ENV} High CPU Utilization"
   comparison_operator       = "GreaterThanThreshold"
   alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
-  insufficient_data_actions = []
   metric_name               = "CPUUtilization"
   namespace                 = "AWS/RDS"
   statistic                 = "Maximum"
@@ -21,7 +20,6 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_db_memory_alarm" {
   alarm_name                = "MySQL ${var.ENV} High Memory Utilization"
   comparison_operator       = "LessThanOrEqualToThreshold"
   alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
-  insufficient_data_actions = []
   metric_name               = "FreeableMemory"
   namespace                 = "AWS/RDS"
   statistic                 = "Minimum"
@@ -40,7 +38,6 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_db_drive_alarm" {
   alarm_name                = "MySQL ${var.ENV} drive usage reaching 90%"
   comparison_operator       = "LessThanThreshold"
   alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
-  insufficient_data_actions = []
   metric_name               = "FreeStorageSpace"
   namespace                 = "AWS/RDS"
   statistic                 = "Minimum"
@@ -57,9 +54,8 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_db_drive_alarm" {
 
 resource "aws_cloudwatch_metric_alarm" "ga_cw_fsx_drive_alarm" {
   alarm_name                = "FSx ${var.ENV} drive usage reaching 90%"
-  comparison_operator       = "LessThanThreshold"
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
   alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
-  insufficient_data_actions = []
   metric_name               = "StorageCapacityUtilization"
   namespace                 = "AWS/FSx"
   statistic                 = "Maximum"
