@@ -31,6 +31,9 @@ resource "aws_instance" "app" {
   }
   root_block_device {
     encrypted                 = true
+    iops                      = var.ROOT_VOLUME_IOPS
+    throughput                = var.ROOT_VOLUME_THROUGHPUT
     volume_size               = var.ROOT_VOLUME_SIZE
+    volume_type               = var.ROOT_VOLUME_TYPE
   }
 }

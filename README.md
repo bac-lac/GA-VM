@@ -68,8 +68,17 @@ The following environment variables are used to control the application at run-t
 > ROLE_ARN *: ARN of the role used by terraform.
 - Default value: ROLE_ARN
 
+> ROOT_VOLUME_IOPS *: The IOPS for the root volume.
+- Default value: 3000
+
 > ROOT_VOLUME_SIZE *: The size of the root volume in GB.
 - Default value: 60
+
+> ROOT_VOLUME_THROUGHPUT *: The throughput for the root volume in MB/s.
+- Default value: 125
+
+> ROOT_VOLUME_TYPE *: The volume type for the root volume.
+- Default value: gp3
 
 # Code Check
 [Checkov](https://www.checkov.io/)

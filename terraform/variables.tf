@@ -135,8 +135,26 @@ variable "ROLE_ARN" {
   default = "ARN"
 }
 
+variable "ROOT_VOLUME_IOPS" {
+  type = number
+  description = "The IOPS for the root volume."
+  default = 3000
+}
+
 variable "ROOT_VOLUME_SIZE" {
   type = number
   description = "The size of the root volume in GB."
   default = 60
+}
+
+variable "ROOT_VOLUME_THROUGHPUT" {
+  type = number
+  description = "The throughput for the root volume in MB/s."
+  default = 125
+}
+
+variable "ROOT_VOLUME_TYPE" {
+  type = string
+  description = "The volume type for the root volume."
+  default = "gp3"
 }
