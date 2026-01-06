@@ -65,7 +65,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_fsx_drive_alarm" {
   period                    = 60
   evaluation_periods        = 5
   datapoints_to_alarm       = 5
-  threshold                 = floor(aws_fsx_windows_file_system.ga_fsx.storage_capacity * 1024 * 1024 * 1024 * 0.10)
+  threshold                 = 90
   treat_missing_data        = "missing"
   alarm_description         = "This metric monitors FSx ${var.ENV} drive usage reaching 90%"
 }
