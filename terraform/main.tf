@@ -19,4 +19,10 @@ provider "aws" {
     role_arn    = "${var.ROLE_ARN}"
     external_id = "${var.EXTERNAL_ID}"
   }
+  default_tags {
+    tags = {
+      Environment = "${var.ENV}"
+      SSC_CBRID   = "21YK"
+    }
+  }
 }
