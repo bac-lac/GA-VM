@@ -68,5 +68,8 @@ The following environment variables are used to control the application at run-t
 > ROLE_ARN *: ARN of the role used by terraform.
 - Default value: ROLE_ARN
 
+> ROOT_VOLUME_SIZE *: The size of the root volume in GB.
+- Default value: 60
+
 # Code Check
 [Checkov](https://www.checkov.io/)

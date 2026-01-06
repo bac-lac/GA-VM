@@ -26,10 +26,11 @@ resource "aws_instance" "app" {
     Name = "MFT-${count.index + 1}"
   }
   metadata_options {
-    http_endpoint = "enabled"
-    http_tokens   = "required"
+    http_endpoint             = "enabled"
+    http_tokens               = "required"
   }
   root_block_device {
-    encrypted     = true
+    encrypted                 = true
+    volume_size               = var.ROOT_VOLUME_SIZE
   }
 }

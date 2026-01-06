@@ -134,3 +134,9 @@ variable "ROLE_ARN" {
   description = "ARN of the role used by terraform."
   default = "ARN"
 }
+
+variable "ROOT_VOLUME_SIZE" {
+  type = number
+  description = "The size of the root volume in GB."
+  default = 60
+}
