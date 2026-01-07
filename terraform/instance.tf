@@ -37,7 +37,7 @@ resource "aws_instance" "app" {
     volume_type               = var.ROOT_VOLUME_TYPE
   }
   ebs_block_device {
-    device_name               = "data"
+    device_name               = "xvdb"
     encrypted                 = true
     iops                      = var.DATA_VOLUME_IOPS
     throughput                = var.DATA_VOLUME_THROUGHPUT
