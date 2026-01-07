@@ -46,30 +46,6 @@ variable "CLOUDWATCH_EMAIL" {
   default = "cloudwatch_email@domain.com"
 }
 
-variable "DATA_VOLUME_IOPS" {
-  type = number
-  description = "The IOPS for the data volume."
-  default = 3000
-}
-
-variable "DATA_VOLUME_SIZE" {
-  type = number
-  description = "The size of the data volume in GB."
-  default = 100
-}
-
-variable "DATA_VOLUME_THROUGHPUT" {
-  type = number
-  description = "The throughput for the data volume in MB/s."
-  default = 125
-}
-
-variable "DATA_VOLUME_TYPE" {
-  type = string
-  description = "The volume type for the data volume."
-  default = "gp3"
-}
-
 variable "DB_ALLOCATED_STORAGE" {
   type = number
   description = "The allocated storage for the database in GB."
