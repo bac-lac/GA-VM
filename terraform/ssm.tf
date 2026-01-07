@@ -94,7 +94,7 @@ resource "aws_ssmquicksetup_configuration_manager" "goanywhere_ssm" {
 
       PatchBaselineRegion  = "ca-central-1"
       PatchBaselineUseDefault = "custom"
-      #PatchPolicyName      = "GoAnywhere-${var.ENV}-${count.index + 1}-b"
+      PatchPolicyName      = "GoAnywhere-${var.ENV}-${count.index + 1}"
 
       RateControlConcurrency   = "100%"
       RateControlErrorThreshold = "33%"
