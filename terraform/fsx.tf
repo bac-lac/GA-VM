@@ -5,4 +5,7 @@ resource "aws_fsx_windows_file_system" "ga_fsx" {
   subnet_ids                    = [data.aws_subnets.app.ids[0]]
   throughput_capacity           = var.FSX_THROUGHPUT_CAPACITY
   weekly_maintenance_start_time = "6:05:00"
+  tags = {
+      Name                      = "GoAnywhere-${var.ENV}"
+    }
 }
