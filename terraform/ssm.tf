@@ -103,7 +103,7 @@ resource "aws_ssmquicksetup_configuration_manager" "goanywhere_ssm" {
 
       SelectedPatchBaselines = local.selected_patch_baselines_json
 
-      TargetAccounts = "685264686784"
+      TargetAccounts = "${var.ACCOUNT}"
       TargetRegions  = "ca-central-1"
       TargetTagKey   = "PatchGroup"
       TargetTagValue = "${count.index + 1}"
