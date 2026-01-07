@@ -25,6 +25,18 @@ The following environment variables are used to control the application at run-t
 > CLOUDWATCH_EMAIL *: The email used for cloudwatch endpoint.
 - Default value: cloudwatch_email@domain.com
 
+> DATA_VOLUME_IOPS *: The IOPS for the data volume.
+- Default value: 3000
+
+> DATA_VOLUME_SIZE *: The size of the data volume in GB.
+- Default value: 60
+
+> DATA_VOLUME_THROUGHPUT *: The throughput for the data volume in MB/s.
+- Default value: 125
+
+> DATA_VOLUME_TYPE *: The volume type for the data volume.
+- Default value: gp3
+
 > DB_ALLOCATED_STORAGE *: The allocated storage for the database in GB.
 - Default value: 20
 
