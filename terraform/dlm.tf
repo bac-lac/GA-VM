@@ -15,10 +15,6 @@ resource "aws_dlm_lifecycle_policy" "default_ebs_snapshots" {
       retain_rule {
         count           = var.DLM_RETENTION_DAYS
       }
-      variable_tags = {
-        instance-id     = "$(instance-id)"
-        timestamp       = "$(timestamp)"
-      }
     }
     target_tags = {
       Snapshot          = "true"
