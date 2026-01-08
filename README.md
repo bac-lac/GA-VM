@@ -46,6 +46,18 @@ The following environment variables are used to control the application at run-t
 > DIRECTORY_ADMIN_PASSWORD *: The admin password for the directory service.
 - Default value: DIRECTORY_ADMIN_PASSWORD
 
+> DLM_INTERVAL *: The interval for the data lifecycle manager schedule.
+- Default value: 24
+
+> DLM_INTERVAL_UNIT *: The unit for the data lifecycle manager schedule.
+- Default value: HOURS
+
+> DLM_RETENTION_DAYS *: The retention days for the data lifecycle manager schedule.
+- Default value: 7
+
+> DLM_START_TIME *: The start time for the data lifecycle manager schedule.
+- Default value: 04:00
+
 > ENV *: The environment in which to deploy the solution.
 - Default value: dev
 - Allowed values: pr, dev, test or prod

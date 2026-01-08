@@ -91,6 +91,30 @@ variable "DIRECTORY_ADMIN_PASSWORD" {
   default = "DIRECTORY_ADMIN_PASSWORD"
 }
 
+variable "DLM_INTERVAL" {
+  type = number
+  description = "The interval for the data lifecycle manager schedule."
+  default = 24
+}
+
+variable "DLM_INTERVAL_UNIT" {
+  type = string
+  description = "The unit for the data lifecycle manager schedule."
+  default = "HOURS"
+}
+
+variable "DLM_RETENTION_DAYS" {
+  type = number
+  description = "The retention days for the data lifecycle manager schedule."
+  default = 7
+}
+
+variable "DLM_START_TIME" {
+  type = string
+  description = "The start time for the data lifecycle manager schedule."
+  default = "04:00"
+}
+
 variable "ENV" {
   type = string
   description = "The environment in which to deploy the solution."

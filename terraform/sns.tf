@@ -32,3 +32,46 @@ resource "aws_sns_topic_policy" "ga_sns_topic_policy" {
   arn = aws_sns_topic.ga_sns_topic.arn
   policy = data.aws_iam_policy_document.ga_sns_topic_access_policy.json
 }
+
+data "aws_iam_policy_document" "ga_sns_topic_access_policy" {
+  statement {
+    actions = [
+      "SNS:GetTopicAttributes",
+      "SNS:SetTopicAttributes",
+      "SNS:AddPermission",
+      "SNS:RemovePermission",
+      "SNS:DeleteTopic",
+      "SNS:Subscribe",
+      "SNS:ListSubscriptionsByTopic",
+      "SNS:Publish"
+    ]
+    effect = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers  = ["*"]
+    }
+    resources = [
+      aws_sns_topic.ga_sns_topic.arn
+    ]
+    condition {
+      test = "StringEquals"
+      variable = "AWS:SourceOwner"
+      values = [
+        "${var.ACCOUNT}"
+      ]
+    }
+    sid = "default_policy"
+  }
+  statement {
+    actions = ["SNS:Publish"]
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers  = ["cloudwatch.amazonaws.com"]
+    }
+    resources = [
+      data.aws_kms_alias.sns.target_key_arn
+    ]
+    sid = "Allow_Publish_Alarms"
+  }
+}

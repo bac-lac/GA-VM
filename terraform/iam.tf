@@ -1,3 +1,4 @@
+# RDS IAM ROLE
 data "aws_iam_policy_document" "ga_rds_monitoring_assume_role" {
   statement {
     effect = "Allow"
@@ -22,49 +23,7 @@ resource "aws_iam_role_policy_attachment" "rds_attach" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
 }
 
-data "aws_iam_policy_document" "ga_sns_topic_access_policy" {
-  statement {
-    actions = [
-      "SNS:GetTopicAttributes",
-      "SNS:SetTopicAttributes",
-      "SNS:AddPermission",
-      "SNS:RemovePermission",
-      "SNS:DeleteTopic",
-      "SNS:Subscribe",
-      "SNS:ListSubscriptionsByTopic",
-      "SNS:Publish"
-    ]
-    effect = "Allow"
-    principals {
-      type        = "AWS"
-      identifiers  = ["*"]
-    }
-    resources = [
-      aws_sns_topic.ga_sns_topic.arn
-    ]
-    condition {
-      test = "StringEquals"
-      variable = "AWS:SourceOwner"
-      values = [
-        "${var.ACCOUNT}"
-      ]
-    }
-    sid = "default_policy"
-  }
-  statement {
-    actions = ["SNS:Publish"]
-    effect = "Allow"
-    principals {
-      type        = "Service"
-      identifiers  = ["cloudwatch.amazonaws.com"]
-    }
-    resources = [
-      data.aws_kms_alias.sns.target_key_arn
-    ]
-    sid = "Allow_Publish_Alarms"
-  }
-}
-
+# SSM IAM ROLE
 resource "aws_iam_role" "ssm_role" {
   name          = "SSMRole-${var.ENV}"
   description   = "Provides access to EC2 for SSM"
@@ -160,4 +119,23 @@ data "aws_iam_policy_document" "ssm_s3_permissions" {
 resource "aws_s3_bucket_policy" "ssm_s3_policy" {
   bucket = aws_s3_bucket.ssm_s3.id
   policy = data.aws_iam_policy_document.ssm_s3_permissions.json
+}
+
+# DLM IAM ROLE
+resource "aws_iam_role" "dlm" {
+  name                = "dlm-default-ebs-snapshot-role"
+  description         = "Provides access to EC2 for DLM"
+  assume_role_policy  = jsonencode({
+    Version           = "2012-10-17",
+    Statement = [{
+      Effect          = "Allow",
+      Principal       = { Service = "dlm.amazonaws.com" },
+      Action          = "sts:AssumeRole"
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "dlm_attach" {
+  role       = aws_iam_role.dlm.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSDataLifecycleManagerServiceRole"
 }
