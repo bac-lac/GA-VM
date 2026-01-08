@@ -4,7 +4,7 @@ resource "aws_dlm_lifecycle_policy" "default_ebs_snapshots" {
   state                 = "ENABLED"
   policy_details {
     resource_types      = ["VOLUME"]
-    schedules {
+    schedule {
       name              = "ebs-snapshots"
       copy_tags         = true
       create_rule {
