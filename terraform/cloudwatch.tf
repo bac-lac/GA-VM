@@ -6,7 +6,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_db_cpu_alarm" {
   namespace                 = "AWS/RDS"
   statistic                 = "Maximum"
   dimensions = {
-    DBInstanceIdentifier  = aws_db_instance.ga_mysql.identifier
+    DBInstanceIdentifier    = aws_db_instance.ga_mysql.identifier
   }
   period                    = 60
   evaluation_periods        = 5
@@ -24,7 +24,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_db_memory_alarm" {
   namespace                 = "AWS/RDS"
   statistic                 = "Minimum"
   dimensions = {
-    DBInstanceIdentifier  = aws_db_instance.ga_mysql.identifier
+    DBInstanceIdentifier    = aws_db_instance.ga_mysql.identifier
   }
   period                    = 60
   evaluation_periods        = 5
@@ -42,7 +42,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_db_drive_alarm" {
   namespace                 = "AWS/RDS"
   statistic                 = "Minimum"
   dimensions = {
-    DBInstanceIdentifier  = aws_db_instance.ga_mysql.identifier
+    DBInstanceIdentifier    = aws_db_instance.ga_mysql.identifier
   }
   period                    = 60
   evaluation_periods        = 5
@@ -68,6 +68,25 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_fsx_drive_alarm" {
   threshold                 = 90
   treat_missing_data        = "missing"
   alarm_description         = "This metric monitors FSx ${var.ENV} drive usage reaching 90%"
+}
+
+resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_cpu_alarm" {
+  count                     = upper(var.MFT_CLUSTER) == "TRUE" ? 2 : 1
+  alarm_name                = "MFT-${count.index + 1} High CPU Utilization"
+  comparison_operator       = "GreaterThanThreshold"
+  alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
+  metric_name               = "CPUUtilization"
+  namespace                 = "AWS/EC2"
+  statistic                 = "Maximum"
+  dimensions = {
+    InstanceId              = aws_instance.app[count.index].id
+  }
+  period                    = 60
+  evaluation_periods        = 5
+  datapoints_to_alarm       = 5
+  threshold                 = 90
+  treat_missing_data        = "missing"
+  alarm_description         = "This metric monitors MFT-${count.index + 1} cpu utilization"
 }
 
 /* resource "aws_cloudwatch_metric_alarm" "ga_cw_nlb_22_alarm" {
