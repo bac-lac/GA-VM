@@ -24,6 +24,7 @@ resource "aws_instance" "app" {
   iam_instance_profile        = aws_iam_instance_profile.ssm_profile.name
   tags = {
     Name = "MFT-${count.index + 1}"
+    PatchGroup = "${count.index + 1}"
   }
   metadata_options {
     http_endpoint             = "enabled"

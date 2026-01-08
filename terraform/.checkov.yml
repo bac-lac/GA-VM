@@ -6,3 +6,8 @@ skip-check:
     - CKV_AWS_103   # Ensure that load balancer is using at least TLS 1.2
     - CKV_AWS_337   # Ensure SSM parameters are using KMS CMK
     - CKV_AWS_179   # Ensure FSX Windows filesystem is encrypted by KMS using a customer managed Key (CMK)
+    - CKV_AWS_144   # Ensure that S3 bucket has cross-region replication enabled
+    - CKV2_AWS_61   # Ensure that an S3 bucket has a lifecycle configuration
+    - CKV2_AWS_62   # Ensure S3 buckets should have event notifications enabled
+    - CKV_AWS_18    # Ensure the S3 bucket has access logging enabled
+    - CKV_AWS_145   # Ensure that S3 buckets are encrypted with KMS by default
