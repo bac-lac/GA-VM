@@ -86,7 +86,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_cpu_alarm" {
   datapoints_to_alarm       = 5
   threshold                 = 90
   treat_missing_data        = "missing"
-  alarm_description         = "This metric monitors MFT-${count.index + 1} cpu utilization"
+  alarm_description         = "This metric monitors MFT-${count} ${var.ENV} cpu utilization"
 }
 
 /* resource "aws_cloudwatch_metric_alarm" "ga_cw_nlb_22_alarm" {
