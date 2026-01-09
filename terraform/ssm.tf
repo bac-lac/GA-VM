@@ -12,7 +12,7 @@ resource "aws_ssm_association" "join_domain" {
    }
 }
 
-############################################################################
+# SSM Patching
 resource "aws_ssm_patch_baseline" "patch_baseline" {
   name            = "BAC-WindowsPatchBaseline-OS-Applications"
   operating_system = "WINDOWS"
@@ -111,3 +111,53 @@ resource "aws_ssmquicksetup_configuration_manager" "goanywhere_ssm" {
     }
   }
 }
+
+# Cloudwatch agent
+locals {
+  cwagent_windows_config = jsonencode({
+    agent: {
+    metrics_collection_interval: 60,
+    logfile: "c:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\Logs\\amazon-cloudwatch-agent.log"
+    },
+    metrics = {
+      namespace = "CWAgent"
+      metrics_collected = {
+        LogicalDisk = {
+          measurement = [
+            {name: "% Free Space", "unit": "Percent"}
+          ]
+          resources = ["*"]
+        }
+        Memory = {
+          measurement = [
+            {name: "Available MBytes", "unit": "Megabytes"}
+          ]
+        }
+      }
+    }
+    logs = {
+      logs_collected = {
+        files = {
+          collect_list = [
+            {
+              file_path: "c:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\Logs\\amazon-cloudwatch-agent.log",
+              log_group_name: "amazon-cloudwatch-agent",
+              log_stream_name: "amazon-cloudwatch-agent-{instance_id}-{local_hostname}",
+              timezone: "UTC"
+            }
+          ]
+        }
+      }
+    },
+    log_stream_name: "log_stream_name"
+  })
+}
+
+resource "aws_ssm_parameter" "cwagent_config_windows" {
+  name        = "/ec2/amazon-cloudwatch-agent/config/windows"
+  description = "CloudWatch Agent config for Windows instances"
+  type        = "String"
+  value       = local.cwagent_windows_config
+  tier        = "Standard"
+}
+
