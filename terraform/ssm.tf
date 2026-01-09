@@ -213,8 +213,4 @@ resource "aws_ssm_association" "cwagent_windows" {
   # re-apply periodically to ensure config/service stay correct
   schedule_expression   = "rate(12 hours)"
   compliance_severity   = "HIGH"
-
-  parameters = {
-    cwagent_config_param = aws_ssm_parameter.cwagent_config_windows.name
-  }
 }
