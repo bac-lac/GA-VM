@@ -172,7 +172,7 @@ resource "aws_ssm_document" "cwagent_install_configure_windows" {
       cwagent_config_param = {
         type        = "String",
         description = "SSM parameter name containing CW Agent JSON",
-        default     = "/GoAnywhere-${var.ENV}/ec2/amazon-cloudwatch-agent/config/windows"
+        default     = "/ec2/amazon-cloudwatch-agent/config/windows"
       }
     },
     mainSteps     = [
