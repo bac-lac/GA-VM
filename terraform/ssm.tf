@@ -201,3 +201,20 @@ resource "aws_ssm_document" "cwagent_install_configure_windows" {
     ]
   })
 }
+
+resource "aws_ssm_association" "cwagent_windows" {
+  name = aws_ssm_document.cwagent_install_configure_windows.name
+
+  targets {
+    key    = "tag:Monitoring"
+    values = ["enabled"]
+  }
+
+  # re-apply periodically to ensure config/service stay correct
+  schedule_expression   = "rate(12 hours)"
+  compliance_severity   = "HIGH"
+
+  parameters = {
+    cwagent_config_param = aws_ssm_parameter.cwagent_config_windows.name
+  }
+}
