@@ -25,7 +25,6 @@ resource "aws_instance" "app" {
   tags = {
     Name                      = "MFT-${count.index + 1}"
     PatchGroup                = "${count.index + 1}"
-    Snapshot                  = true
   }
   metadata_options {
     http_endpoint             = "enabled"
@@ -37,5 +36,8 @@ resource "aws_instance" "app" {
     throughput                = var.ROOT_VOLUME_THROUGHPUT
     volume_size               = var.ROOT_VOLUME_SIZE
     volume_type               = var.ROOT_VOLUME_TYPE
+    tags = {
+      Snapshot                = true
+    }
   }
 }
