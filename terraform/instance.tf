@@ -23,8 +23,9 @@ resource "aws_instance" "app" {
   ebs_optimized               = true
   iam_instance_profile        = aws_iam_instance_profile.ssm_profile.name
   tags = {
-    Name = "MFT-${count.index + 1}"
-    PatchGroup = "${count.index + 1}"
+    Name                      = "MFT-${count.index + 1}"
+    PatchGroup                = "${count.index + 1}"
+    Snapshot                  = true
   }
   metadata_options {
     http_endpoint             = "enabled"

@@ -3,7 +3,7 @@ resource "aws_dlm_lifecycle_policy" "default_ebs_snapshots" {
   execution_role_arn    = aws_iam_role.dlm.arn
   state                 = "ENABLED"
   policy_details {
-    resource_types      = ["VOLUME"]
+    resource_types      = ["INSTANCE"]
     schedule {
       name              = "ebs-snapshots"
       copy_tags         = true
