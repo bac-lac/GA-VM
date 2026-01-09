@@ -156,7 +156,7 @@ locals {
 resource "aws_ssm_parameter" "cwagent_config_windows" {
   name        = "/ec2/amazon-cloudwatch-agent/config/windows"
   description = "CloudWatch Agent config for Windows instances"
-  type        = "String"
+  type        = "SecureString"
   value       = local.cwagent_windows_config
   tier        = "Standard"
 }
