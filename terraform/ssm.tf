@@ -168,12 +168,6 @@ resource "aws_ssm_document" "cwagent_install_configure_windows" {
   content = jsonencode({
     schemaVersion = "2.2",
     description   = "Install Amazon CloudWatch Agent on Windows, write config from SSM Parameter Store, and start the service",
-    parameters    = {
-      cwagent_config_param = {
-        type        = "String",
-        description = "SSM parameter name containing CW Agent JSON"
-      }
-    },
     mainSteps     = [
       {
         name   = "InstallCloudWatchAgent",
@@ -188,7 +182,7 @@ resource "aws_ssm_document" "cwagent_install_configure_windows" {
         action = "aws:downloadContent",
         inputs = {
           sourceType       = "SSMParameter",
-          sourceInfo       = jsonencode({ name = "{{ cwagent_config_param }}" }),
+          sourceInfo       = jsonencode({ name = "/GoAnywhere-${var.ENV}/ec2/amazon-cloudwatch-agent/config/windows" }),
           destinationPath  = "C:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent.json"
         }
       },
