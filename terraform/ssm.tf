@@ -116,24 +116,22 @@ resource "aws_ssmquicksetup_configuration_manager" "goanywhere_ssm" {
 resource "aws_ssm_association" "install_cw_agent" {
   name        = "AWS-ConfigureAWSPackage"
   targets {
-    key     = "tag:Monitoring"
-    values  = ["enabled"]
+    key       = "tag:Monitoring"
+    values    = ["enabled"]
   }
   parameters  = {
-    action = "Install"
-    name   = "AmazonCloudWatchAgent"
+    action    = "Install"
+    name      = "AmazonCloudWatchAgent"
   }
 }
 
 resource "aws_ssm_association" "start_cw_agent" {
   name        = "AWS-RunPowerShellScript"
   targets {
-    key     = "tag:Monitoring"
-    values  = ["enabled"]
+    key       = "tag:Monitoring"
+    values    = ["enabled"]
   }
   parameters  = {
-    commands = [
-      "Start-Service AmazonCloudWatchAgent"
-    ]
+    commands  = "Start-Service AmazonCloudWatchAgent"
   }
 }
