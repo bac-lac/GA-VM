@@ -132,6 +132,9 @@ resource "aws_ssm_association" "start_cw_agent" {
     values    = ["enabled"]
   }
   parameters  = {
-    commands  = "Start-Service AmazonCloudWatchAgent"
+    commands  = join("\n", [
+    "Start-Service AmazonCloudWatchAgent",
+    "Set-Service -Name AmazonCloudWatchAgent -StartupType Automatic"
+  ])
   }
 }
