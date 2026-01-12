@@ -162,7 +162,7 @@ resource "aws_ssm_parameter" "cwagent_config_windows" {
 }
 
 resource "aws_ssm_document" "install_cwagent_windows" {
-  name                        = "${var.project}-install-cwagent-windows"
+  name                        = "ga-install-cwagent-windows-${var.ENV}"
   document_type               = "Command"
 
   content = jsonencode({
