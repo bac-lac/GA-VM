@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_metric_alarm" "ga_cw_db_cpu_alarm" {
-  alarm_name                = "MySQL ${var.ENV} High CPU Utilization"
+  alarm_name                = "MySQL ${var.ENV} CPU reaching 90%"
   comparison_operator       = "GreaterThanThreshold"
   alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
   metric_name               = "CPUUtilization"
@@ -17,7 +17,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_db_cpu_alarm" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "ga_cw_db_memory_alarm" {
-  alarm_name                = "MySQL ${var.ENV} High Memory Utilization"
+  alarm_name                = "MySQL ${var.ENV} Memory reaching 90%"
   comparison_operator       = "LessThanOrEqualToThreshold"
   alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
   metric_name               = "FreeableMemory"
@@ -72,7 +72,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_fsx_drive_alarm" {
 
 resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_cpu_alarm" {
   count                     = upper(var.MFT_CLUSTER) == "TRUE" ? 2 : 1
-  alarm_name                = "MFT-${count.index + 1} ${var.ENV} High CPU Utilization"
+  alarm_name                = "MFT-${count.index + 1} ${var.ENV} CPU Utilization reaching 90%"
   comparison_operator       = "GreaterThanThreshold"
   alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
   metric_name               = "CPUUtilization"
