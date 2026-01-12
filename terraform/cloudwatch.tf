@@ -94,7 +94,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_hdd_alarm" {
   alarm_name                = "MFT-${count.index + 1} ${var.ENV} C drive usage reaching 90%"
   comparison_operator       = "LessThanThreshold"
   alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
-  metric_name               = "CPUUtilization"
+  metric_name               = "LogicalDisk % Free Space"
   namespace                 = "CWAgent"
   statistic                 = "Minimum"
   dimensions = {
