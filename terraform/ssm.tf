@@ -170,14 +170,11 @@ resource "aws_ssm_document" "install_cwagent_windows" {
     description               = "Install and configure CloudWatch Agent on Windows",
     mainSteps = [
       {
-        action                = "aws:runDocument"
-        name                  = "InstallCloudWatchAgentPackage"
+        name   = "InstallCloudWatchAgent",
+        action = "aws:configurePackage",
         inputs = {
-          documentType        = "Package"
-          documentParameters  = {
-            name              = "AmazonCloudWatchAgent"
-            version           = "latest"
-          }
+          name      = "AmazonCloudWatchAgent",
+          action    = "Install"
         }
       },
       {
