@@ -112,95 +112,28 @@ resource "aws_ssmquicksetup_configuration_manager" "goanywhere_ssm" {
   }
 }
 
-# Cloudwatch agent
-locals {
-  cwagent_windows_config = jsonencode({
-    agent: {
-    metrics_collection_interval: 60,
-    logfile: "c:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\Logs\\amazon-cloudwatch-agent.log"
-    },
-    metrics = {
-      namespace = "CWAgent"
-      metrics_collected = {
-        LogicalDisk = {
-          measurement = [
-            {name: "% Free Space", "unit": "Percent"}
-          ]
-          resources = ["*"]
-        }
-        Memory = {
-          measurement = [
-            {name: "Available MBytes", "unit": "Megabytes"}
-          ]
-        }
-      }
-    }
-    logs = {
-      logs_collected = {
-        files = {
-          collect_list = [
-            {
-              file_path: "c:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\Logs\\amazon-cloudwatch-agent.log",
-              log_group_name: "amazon-cloudwatch-agent",
-              log_stream_name: "amazon-cloudwatch-agent-{instance_id}-{local_hostname}",
-              timezone: "UTC"
-            }
-          ]
-        }
-      }
-    },
-    log_stream_name: "log_stream_name"
-  })
-}
-
-/* resource "aws_ssm_parameter" "cwagent_config_windows" {
-  name        = "/GoAnywhere-${var.ENV}/ec2/amazon-cloudwatch-agent/config/windows"
-  description = "CloudWatch Agent config for Windows instances"
-  type        = "SecureString"
-  value       = local.cwagent_windows_config
-  tier        = "Standard"
-} */
-
-resource "aws_ssm_document" "install_cwagent_windows" {
-  name                        = "ga-install-cwagent-windows-${var.ENV}"
-  document_type               = "Command"
-
-  content = jsonencode({
-    schemaVersion             = "2.2",
-    description               = "Install and configure CloudWatch Agent on Windows",
-    mainSteps = [
-      {
-        name   = "InstallCloudWatchAgent",
-        action = "aws:configurePackage",
-        inputs = {
-          name      = "AmazonCloudWatchAgent",
-          action    = "Install"
-        }
-      },
-      {
-        action                = "aws:runPowerShellScript"
-        name                  = "StartCloudWatchAgent"
-        inputs = {
-          runCommand = [
-            "$configPath = 'C:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent.json'",
-            "New-Item -ItemType Directory -Force -Path (Split-Path $configPath) | Out-Null",
-            "$json = @'\n${local.cwagent_windows_config}\n'@",
-            "Set-Content -Path $configPath -Value $json -Encoding UTF8",
-            "try { & 'C:\\Program Files\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent-ctl.ps1' -a stop } catch {}",
-            "& 'C:\\Program Files\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent-ctl.ps1' -a start -m ec2 -c file:$configPath",
-            "Set-Service -Name AmazonCloudWatchAgent -StartupType Automatic"
-
-          ]
-        }
-      }
-    ]
-  })
-}
-
-resource "aws_ssm_association" "cwagent_windows" {
-  name      = aws_ssm_document.install_cwagent_windows.name
+# Cloudwatch agent installation and start
+resource "aws_ssm_association" "install_cw_agent" {
+  name        = "AWS-ConfigureAWSPackage"
   targets {
     key     = "tag:Monitoring"
     values  = ["enabled"]
+  }
+  parameters  = {
+    action = "Install"
+    name   = "AmazonCloudWatchAgent"
+  }
+}
+
+resource "aws_ssm_association" "start_cw_agent" {
+  name        = "AWS-RunPowerShellScript"
+  targets {
+    key     = "tag:Monitoring"
+    values  = ["enabled"]
+  }
+  parameters  = {
+    commands = [
+      "Start-Service AmazonCloudWatchAgent"
+    ]
   }
 }
