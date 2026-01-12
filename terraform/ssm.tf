@@ -153,13 +153,13 @@ locals {
   })
 }
 
-resource "aws_ssm_parameter" "cwagent_config_windows" {
+/* resource "aws_ssm_parameter" "cwagent_config_windows" {
   name        = "/GoAnywhere-${var.ENV}/ec2/amazon-cloudwatch-agent/config/windows"
   description = "CloudWatch Agent config for Windows instances"
   type        = "SecureString"
   value       = local.cwagent_windows_config
   tier        = "Standard"
-}
+} */
 
 resource "aws_ssm_document" "install_cwagent_windows" {
   name                        = "ga-install-cwagent-windows-${var.ENV}"
