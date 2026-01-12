@@ -26,6 +26,7 @@ resource "aws_instance" "app" {
     Name                      = "MFT-${count.index + 1}"
     PatchGroup                = "${count.index + 1}"
     Monitoring                = "enabled"
+    Snapshot                  = "true"
   }
   metadata_options {
     http_endpoint             = "enabled"

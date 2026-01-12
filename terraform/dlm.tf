@@ -3,7 +3,7 @@ resource "aws_dlm_lifecycle_policy" "default_ebs_snapshots" {
   execution_role_arn    = aws_iam_role.dlm.arn
   state                 = "ENABLED"
   policy_details {
-    resource_types      = ["VOLUME"]
+    resource_types      = ["INSTANCE"]
     schedule {
       name              = "ebs-snapshots"
       copy_tags         = true
@@ -14,6 +14,10 @@ resource "aws_dlm_lifecycle_policy" "default_ebs_snapshots" {
       }
       retain_rule {
         count           = var.DLM_RETENTION_DAYS
+      }
+      variable_tags = {
+        instance-id     = "$(instance-id)"
+        timestamp       = "$(timestamp)"
       }
     }
     target_tags = {
