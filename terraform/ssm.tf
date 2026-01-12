@@ -178,21 +178,13 @@ resource "aws_ssm_document" "install_cwagent_windows" {
         }
       },
       {
-        action                = "aws:downloadContent"
-        name                  = "FetchConfigFromParameterStore"
-        inputs = {
-          source              = "SSM"
-          ssm = {
-            name              = aws_ssm_parameter.cwagent_config_windows.name
-          }
-          destination         = "C:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent.json"
-        }
-      },
-      {
         action                = "aws:runPowerShellScript"
         name                  = "StartCloudWatchAgent"
         inputs = {
           runCommand = [
+            # Fetch config from SSM Parameter Store
+            "$config = (Get-SSMParameter -Name '/GoAnywhere-${var.ENV}/ec2/amazon-cloudwatch-agent/config/windows' -WithDecryption).Parameter.Value",
+            "$config | Out-File -FilePath 'C:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent.json' -Encoding ascii",
             # Stop if running (ignore errors)
             "try { & 'C:\\Program Files\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent-ctl.ps1' -a stop } catch {}",
             # Start with file config
