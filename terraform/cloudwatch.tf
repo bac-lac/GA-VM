@@ -89,6 +89,25 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_cpu_alarm" {
   alarm_description         = "This metric monitors MFT-${count.index + 1} ${var.ENV} cpu utilization"
 }
 
+resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_hdd_alarm" {
+  count                     = upper(var.MFT_CLUSTER) == "TRUE" ? 2 : 1
+  alarm_name                = "MFT-${count.index + 1} ${var.ENV} C drive usage reaching 90%"
+  comparison_operator       = "LessThanThreshold"
+  alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
+  metric_name               = "CPUUtilization"
+  namespace                 = "CWAgent"
+  statistic                 = "Minimum"
+  dimensions = {
+    InstanceId              = aws_instance.app[count.index].id
+  }
+  period                    = 60
+  evaluation_periods        = 5
+  datapoints_to_alarm       = 5
+  threshold                 = 10
+  treat_missing_data        = "missing"
+  alarm_description         = "This metric monitors MFT-${count.index + 1} ${var.ENV} C drive utilization"
+}
+
 /* resource "aws_cloudwatch_metric_alarm" "ga_cw_nlb_22_alarm" {
   alarm_name                = "NLB port 22 ${var.ENV} unhealthy host"
   comparison_operator       = "LessThanThreshold"
