@@ -34,7 +34,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_db_memory_alarm" {
   alarm_description         = "This metric monitors RDS ${var.ENV} memory utilization"
 }
 
-resource "aws_cloudwatch_metric_alarm" "ga_cw_db_drive_alarm" {
+resource "aws_cloudwatch_metric_alarm" "ga_cw_db_storage_alarm" {
   alarm_name                = "MySQL ${var.ENV} Storage reaching 90%"
   comparison_operator       = "LessThanOrEqualToThreshold"
   alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
@@ -52,7 +52,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_db_drive_alarm" {
   alarm_description         = "This metric monitors RDS ${var.ENV} storage utilization"
 }
 
-resource "aws_cloudwatch_metric_alarm" "ga_cw_fsx_drive_alarm" {
+resource "aws_cloudwatch_metric_alarm" "ga_cw_fsx_storage_alarm" {
   alarm_name                = "FSx ${var.ENV} Storage reaching 90%"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
@@ -125,7 +125,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_cpu_alarm" {
   alarm_description         = "This metric monitors MFT-${count.index + 1} ${var.ENV} cpu utilization"
 }
 
-resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_hdd_alarm" {
+resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_storage_alarm" {
   count                     = upper(var.MFT_CLUSTER) == "TRUE" ? 2 : 1
   alarm_name                = "MFT-${count.index + 1} ${var.ENV} Storage reaching 90%"
   comparison_operator       = "LessThanOrEqualToThreshold"
