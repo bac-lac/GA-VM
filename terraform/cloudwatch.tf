@@ -70,6 +70,42 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_fsx_drive_alarm" {
   alarm_description         = "This metric monitors FSx ${var.ENV} storage utilization"
 }
 
+resource "aws_cloudwatch_metric_alarm" "ga_cw_fsx_memory_alarm" {
+  alarm_name                = "FSx ${var.ENV} Memory reaching 90%"
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
+  alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
+  metric_name               = "MemoryUtilization"
+  namespace                 = "AWS/FSx"
+  statistic                 = "Maximum"
+  dimensions = {
+    FileSystemId            = aws_fsx_windows_file_system.ga_fsx.id
+  }
+  period                    = 60
+  evaluation_periods        = 5
+  datapoints_to_alarm       = 5
+  threshold                 = 90
+  treat_missing_data        = "missing"
+  alarm_description         = "This metric monitors FSx ${var.ENV} memory utilization"
+}
+
+resource "aws_cloudwatch_metric_alarm" "ga_cw_fsx_cpu_alarm" {
+  alarm_name                = "FSx ${var.ENV} CPU reaching 90%"
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
+  alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
+  metric_name               = "CPUUtilization"
+  namespace                 = "AWS/FSx"
+  statistic                 = "Maximum"
+  dimensions = {
+    FileSystemId            = aws_fsx_windows_file_system.ga_fsx.id
+  }
+  period                    = 60
+  evaluation_periods        = 5
+  datapoints_to_alarm       = 5
+  threshold                 = 90
+  treat_missing_data        = "missing"
+  alarm_description         = "This metric monitors FSx ${var.ENV} cpu utilization"
+}
+
 resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_cpu_alarm" {
   count                     = upper(var.MFT_CLUSTER) == "TRUE" ? 2 : 1
   alarm_name                = "MFT-${count.index + 1} ${var.ENV} CPU reaching 90%"
