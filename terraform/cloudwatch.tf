@@ -186,11 +186,10 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_nlb_22_alarm" {
   alarm_description         = "This metric monitors NLB port 22 ${var.ENV} health"
 }
 
-/* resource "aws_cloudwatch_metric_alarm" "ga_cw_alb_443_alarm" {
+resource "aws_cloudwatch_metric_alarm" "ga_cw_alb_443_alarm" {
   alarm_name                = "ALB port 443 ${var.ENV} unhealthy host"
   comparison_operator       = "LessThanThreshold"
   alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
-  insufficient_data_actions = []
   metric_name               = "HealthyHostCount"
   namespace                 = "AWS/ApplicationELB"
   statistic                 = "Minimum"
@@ -203,7 +202,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_nlb_22_alarm" {
   alarm_description         = "This metric monitors ALB port 443 ${var.ENV} health"
 }
 
-resource "aws_cloudwatch_metric_alarm" "ga_cw_alb_8443_alarm" {
+/* resource "aws_cloudwatch_metric_alarm" "ga_cw_alb_8443_alarm" {
   alarm_name                = "ALB port 8443 ${var.ENV} unhealthy host"
   comparison_operator       = "LessThanThreshold"
   alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
