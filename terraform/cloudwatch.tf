@@ -1,6 +1,6 @@
 resource "aws_cloudwatch_metric_alarm" "ga_cw_db_cpu_alarm" {
   alarm_name                = "MySQL ${var.ENV} CPU reaching 90%"
-  comparison_operator       = "GreaterThanThreshold"
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
   alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
   metric_name               = "CPUUtilization"
   namespace                 = "AWS/RDS"
@@ -36,7 +36,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_db_memory_alarm" {
 
 resource "aws_cloudwatch_metric_alarm" "ga_cw_db_drive_alarm" {
   alarm_name                = "MySQL ${var.ENV} Storage reaching 90%"
-  comparison_operator       = "LessThanThreshold"
+  comparison_operator       = "LessThanOrEqualToThreshold"
   alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
   metric_name               = "FreeStorageSpace"
   namespace                 = "AWS/RDS"
@@ -73,7 +73,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_fsx_drive_alarm" {
 resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_cpu_alarm" {
   count                     = upper(var.MFT_CLUSTER) == "TRUE" ? 2 : 1
   alarm_name                = "MFT-${count.index + 1} ${var.ENV} CPU reaching 90%"
-  comparison_operator       = "GreaterThanThreshold"
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
   alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
   metric_name               = "CPUUtilization"
   namespace                 = "AWS/EC2"
@@ -92,7 +92,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_cpu_alarm" {
 resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_hdd_alarm" {
   count                     = upper(var.MFT_CLUSTER) == "TRUE" ? 2 : 1
   alarm_name                = "MFT-${count.index + 1} ${var.ENV} Storage reaching 90%"
-  comparison_operator       = "LessThanThreshold"
+  comparison_operator       = "LessThanOrEqualToThreshold"
   alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
   metric_name               = "LogicalDisk % Free Space"
   namespace                 = "CWAgent"
