@@ -113,6 +113,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_hdd_alarm" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_memory_alarm" {
+  count                     = upper(var.MFT_CLUSTER) == "TRUE" ? 2 : 1
   alarm_name                = "MFT-${count.index + 1} ${var.ENV} Memory reaching 90%"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
