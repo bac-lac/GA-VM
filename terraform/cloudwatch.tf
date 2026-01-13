@@ -35,7 +35,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_db_memory_alarm" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "ga_cw_db_drive_alarm" {
-  alarm_name                = "MySQL ${var.ENV} drive usage reaching 90%"
+  alarm_name                = "MySQL ${var.ENV} Storage reaching 90%"
   comparison_operator       = "LessThanThreshold"
   alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
   metric_name               = "FreeStorageSpace"
@@ -49,11 +49,11 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_db_drive_alarm" {
   datapoints_to_alarm       = 5
   threshold                 = floor(aws_db_instance.ga_mysql.allocated_storage * 1024 * 1024 * 1024 * 0.10)
   treat_missing_data        = "missing"
-  alarm_description         = "This metric monitors RDS ${var.ENV} drive usage reaching 90%"
+  alarm_description         = "This metric monitors RDS ${var.ENV} storage utilization"
 }
 
 resource "aws_cloudwatch_metric_alarm" "ga_cw_fsx_drive_alarm" {
-  alarm_name                = "FSx ${var.ENV} drive usage reaching 90%"
+  alarm_name                = "FSx ${var.ENV} Storage reaching 90%"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
   metric_name               = "StorageCapacityUtilization"
@@ -67,12 +67,12 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_fsx_drive_alarm" {
   datapoints_to_alarm       = 5
   threshold                 = 90
   treat_missing_data        = "missing"
-  alarm_description         = "This metric monitors FSx ${var.ENV} drive usage reaching 90%"
+  alarm_description         = "This metric monitors FSx ${var.ENV} storage utilization"
 }
 
 resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_cpu_alarm" {
   count                     = upper(var.MFT_CLUSTER) == "TRUE" ? 2 : 1
-  alarm_name                = "MFT-${count.index + 1} ${var.ENV} CPU Utilization reaching 90%"
+  alarm_name                = "MFT-${count.index + 1} ${var.ENV} CPU reaching 90%"
   comparison_operator       = "GreaterThanThreshold"
   alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
   metric_name               = "CPUUtilization"
@@ -91,7 +91,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_cpu_alarm" {
 
 resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_hdd_alarm" {
   count                     = upper(var.MFT_CLUSTER) == "TRUE" ? 2 : 1
-  alarm_name                = "MFT-${count.index + 1} ${var.ENV} C drive usage reaching 90%"
+  alarm_name                = "MFT-${count.index + 1} ${var.ENV} Storage reaching 90%"
   comparison_operator       = "LessThanThreshold"
   alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
   metric_name               = "LogicalDisk % Free Space"
@@ -109,7 +109,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_hdd_alarm" {
   datapoints_to_alarm       = 5
   threshold                 = 10
   treat_missing_data        = "missing"
-  alarm_description         = "This metric monitors MFT-${count.index + 1} ${var.ENV} C drive utilization"
+  alarm_description         = "This metric monitors MFT-${count.index + 1} ${var.ENV} storage utilization"
 }
 
 /* resource "aws_cloudwatch_metric_alarm" "ga_cw_nlb_22_alarm" {
