@@ -100,6 +100,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_hdd_alarm" {
   dimensions = {
     InstanceId              = aws_instance.app[count.index].id
     instance                = "C:"
+    objectname              = "LogicalDisk"
   }
   period                    = 60
   evaluation_periods        = 5
