@@ -112,6 +112,27 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_hdd_alarm" {
   alarm_description         = "This metric monitors MFT-${count.index + 1} ${var.ENV} storage utilization"
 }
 
+resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_memory_alarm" {
+  alarm_name                = "MFT-${count.index + 1} ${var.ENV} Memory reaching 90%"
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
+  alarm_actions             = [aws_sns_topic.ga_sns_topic.arn]
+  metric_name               = "Memory % Committed Bytes In Use"
+  namespace                 = "CWAgent"
+  statistic                 = "Maximum"
+  dimensions = {
+    InstanceId              = aws_instance.app[count.index].id
+    objectname              = "Memory"
+    InstanceType            = var.INSTANCE_TYPE
+    ImageId                 = data.aws_ami.windows.id
+  }
+  period                    = 60
+  evaluation_periods        = 5
+  datapoints_to_alarm       = 5
+  threshold                 = 90
+  treat_missing_data        = "missing"
+  alarm_description         = "This metric monitors MFT-${count.index + 1} ${var.ENV} memory utilization"
+}
+
 /* resource "aws_cloudwatch_metric_alarm" "ga_cw_nlb_22_alarm" {
   alarm_name                = "NLB port 22 ${var.ENV} unhealthy host"
   comparison_operator       = "LessThanThreshold"
