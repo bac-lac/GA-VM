@@ -102,7 +102,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_hdd_alarm" {
     instance                = "C:"
     objectname              = "LogicalDisk"
     InstanceType            = var.INSTANCE_TYPE
-    ImageId                 = data.aws_ami.ga_windows.id
+    ImageId                 = data.aws_ami.windows.id
   }
   period                    = 60
   evaluation_periods        = 5
