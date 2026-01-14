@@ -75,8 +75,8 @@ resource "aws_ssmquicksetup_configuration_manager" "goanywhere_ssm" {
   description = "Patchgroup ${count.index + 1}"
 
   configuration_definition {
-    local_deployment_administration_role_arn = "arn:aws:iam::${var.ACCOUNT}:role/AWS-QuickSetup-SSM-LocalAdministrationRole"
-    local_deployment_execution_role_name     = "AWS-QuickSetup-SSM-LocalExecutionRole"
+    local_deployment_administration_role_arn = aws_iam_role.ssm_qs_admin_role.arn
+    local_deployment_execution_role_name     = aws_iam_role.ssm_qs_exec_role.name
 
     type = "AWSQuickSetupType-PatchPolicy"
     parameters = {

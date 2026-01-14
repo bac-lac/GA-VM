@@ -126,6 +126,71 @@ resource "aws_s3_bucket_policy" "ssm_s3_policy" {
   policy = data.aws_iam_policy_document.ssm_s3_permissions.json
 }
 
+# SSM QUICKSETUP ROLES
+resource "aws_iam_role" "ssm_qs_exec_role" {
+  name          = "AWS-QuickSetup-GA-LocalExecutionRole-${var.ENV}"
+  description   = "Provides access to QuickSetup execution role for SSM"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Principal = {
+          "AWS": "arn:aws:iam::${var.ACCOUNT}:role/AWS-QuickSetup-GA-LocalAdministrationRole"
+        },
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ssm_qs_exec_attach" {
+  role       = aws_iam_role.ssm_qs_exec_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSQuickSetupPatchPolicyDeploymentRolePolicy"
+}
+
+resource "aws_iam_role" "ssm_qs_admin_role" {
+  name          = "AWS-QuickSetup-GA-LocalAdministrationRole-${var.ENV}"
+  description   = "Provides access to QuickSetup admin role for SSM"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        "Effect": "Allow",
+        "Principal": {
+            "Service": "cloudformation.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole",
+        "Condition": {
+            "StringEquals": {
+                "aws:SourceAccount": "${var.ACCOUNT}"
+            },
+            "StringLike": {
+                "aws:SourceArn": "arn:aws:cloudformation:*:${var.ACCOUNT}:stackset/AWS-QuickSetup-*"
+            }
+        }
+      }
+    ]
+  })
+}
+
+data "aws_iam_policy_document" "ssm_qs_admin_permissions" {
+  version = "2012-10-17"
+  statement {
+    Action: [
+        "sts:AssumeRole"
+    ],
+    Resource: "arn:aws:iam::${var.ACCOUNT}:role/AWS-QuickSetup-GA-LocalExecutionRole",
+    Effect: "Allow"
+  }
+}
+
+resource "aws_iam_policy" "qs_admin_policy" {
+  name        = "AWS-QuickSetup-GA-LocalAdministrationRole-policy-${var.ENV}"
+  description = "Permissions for Quick Setup local admin role"
+  policy      = data.aws_iam_policy_document.ssm_qs_admin_permissions.json
+}
+
 # DLM IAM ROLE
 resource "aws_iam_role" "dlm" {
   name                = "dlm-default-ebs-snapshot-role"
