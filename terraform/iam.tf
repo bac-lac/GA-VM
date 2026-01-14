@@ -191,6 +191,11 @@ resource "aws_iam_policy" "qs_admin_policy" {
   policy      = data.aws_iam_policy_document.ssm_qs_admin_permissions.json
 }
 
+resource "aws_iam_role_policy_attachment" "qs_admin_attach" {
+  role       = aws_iam_role.ssm_qs_admin_role.name
+  policy_arn = aws_iam_policy.qs_admin_policy.arn
+}
+
 # DLM IAM ROLE
 resource "aws_iam_role" "dlm" {
   name                = "dlm-default-ebs-snapshot-role"
