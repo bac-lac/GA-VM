@@ -151,7 +151,7 @@ resource "aws_iam_role_policy_attachment" "ssm_qs_exec_attach" {
 
 resource "aws_iam_role" "ssm_qs_admin_role" {
   name          = "AWS-QuickSetup-GA-LocalAdministrationRole-${var.ENV}"
-  description   = "Provides access to QuickSetup admin role for SSM"
+  description   = "Local Admin role for AWS SSM Quick Setup (GA)"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
