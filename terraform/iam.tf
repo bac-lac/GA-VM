@@ -132,20 +132,20 @@ data "aws_iam_policy_document" "qs_exec_assume_role" {
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = [aws_iam_role.qs_admin.arn]
+      identifiers = [aws_iam_role.ssm_qs_admin_role.arn]
     }
     actions = ["sts:AssumeRole"]
   }
 }
 
-resource "aws_iam_role" "qs_exec" {
+resource "aws_iam_role" "ssm_qs_exec_role" {
   name               = "AWS-QuickSetup-GA-LocalExecutionRole-pr"
   assume_role_policy = data.aws_iam_policy_document.qs_exec_assume_role.json
   description        = "Local Execution role for AWS SSM Quick Setup (GA)"
 }
 
 resource "aws_iam_role_policy_attachment" "ssm_qs_exec_attach" {
-  role       = aws_iam_role.qs_exec.name
+  role       = aws_iam_role.ssm_qs_exec_role.name
   policy_arn = "arn:aws:iam::aws:policy/AWSQuickSetupPatchPolicyDeploymentRolePolicy"
 }
 
