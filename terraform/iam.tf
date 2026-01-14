@@ -179,8 +179,8 @@ data "aws_iam_policy_document" "ssm_qs_admin_permissions" {
   statement {
     Action = [
         "sts:AssumeRole"
-    ],
-    Resource = "arn:aws:iam::${var.ACCOUNT}:role/AWS-QuickSetup-GA-LocalExecutionRole",
+    ]
+    Resource = "arn:aws:iam::${var.ACCOUNT}:role/AWS-QuickSetup-GA-LocalExecutionRole"
     Effect = "Allow"
   }
 }
