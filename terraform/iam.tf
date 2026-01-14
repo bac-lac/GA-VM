@@ -127,25 +127,25 @@ resource "aws_s3_bucket_policy" "ssm_s3_policy" {
 }
 
 # SSM QUICKSETUP ROLES
-resource "aws_iam_role" "ssm_qs_exec_role" {
-  name          = "AWS-QuickSetup-GA-LocalExecutionRole-${var.ENV}"
-  description   = "Provides access to QuickSetup execution role for SSM"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Principal = {
-          "AWS": "arn:aws:iam::${var.ACCOUNT}:role/AWS-QuickSetup-GA-LocalAdministrationRole-${var.ENV}"
-        },
-        Action = "sts:AssumeRole"
-      }
-    ]
-  })
+data "aws_iam_policy_document" "qs_exec_assume_role" {
+  statement {
+    effect = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = [aws_iam_role.qs_admin.arn]
+    }
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+resource "aws_iam_role" "qs_exec" {
+  name               = "AWS-QuickSetup-GA-LocalExecutionRole-pr"
+  assume_role_policy = data.aws_iam_policy_document.qs_exec_assume_role.json
+  description        = "Local Execution role for AWS SSM Quick Setup (GA)"
 }
 
 resource "aws_iam_role_policy_attachment" "ssm_qs_exec_attach" {
-  role       = aws_iam_role.ssm_qs_exec_role.name
+  role       = aws_iam_role.qs_exec.name
   policy_arn = "arn:aws:iam::aws:policy/AWSQuickSetupPatchPolicyDeploymentRolePolicy"
 }
 
