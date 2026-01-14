@@ -136,7 +136,7 @@ resource "aws_iam_role" "ssm_qs_exec_role" {
       {
         Effect = "Allow",
         Principal = {
-          "AWS": "arn:aws:iam::${var.ACCOUNT}:role/AWS-QuickSetup-GA-LocalAdministrationRole"
+          "AWS": "arn:aws:iam::${var.ACCOUNT}:role/AWS-QuickSetup-GA-LocalAdministrationRole-${var.ENV}"
         },
         Action = "sts:AssumeRole"
       }
@@ -180,7 +180,7 @@ data "aws_iam_policy_document" "ssm_qs_admin_permissions" {
     actions = [
         "sts:AssumeRole"
     ]
-    resources = ["arn:aws:iam::${var.ACCOUNT}:role/AWS-QuickSetup-GA-LocalExecutionRole"]
+    resources = ["arn:aws:iam::${var.ACCOUNT}:role/AWS-QuickSetup-GA-LocalExecutionRole-${var.ENV}"]
     effect = "Allow"
   }
 }
