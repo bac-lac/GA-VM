@@ -180,7 +180,7 @@ data "aws_iam_policy_document" "ssm_qs_admin_permissions" {
     actions = [
         "sts:AssumeRole"
     ]
-    resources = ["arn:aws:iam::${var.ACCOUNT}:role/AWS-QuickSetup-GA-LocalExecutionRole-${var.ENV}"]
+    resources = [aws_iam_role.ssm_qs_exec_role.arn]
     effect = "Allow"
   }
 }

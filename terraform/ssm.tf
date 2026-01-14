@@ -110,6 +110,7 @@ resource "aws_ssmquicksetup_configuration_manager" "goanywhere_ssm" {
       TargetType     = "Tags"
     }
   }
+  depends_on  = [aws_iam_role.ssm_qs_exec_role, aws_iam_role.ssm_qs_admin_role]
 }
 
 # Cloudwatch agent installation and start
