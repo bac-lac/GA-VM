@@ -69,7 +69,7 @@ locals {
 }
 
 resource "aws_ssmquicksetup_configuration_manager" "goanywhere_ssm" {
-  count = 2
+  count       = upper(var.MFT_CLUSTER) == "TRUE" ? 2 : 1
   
   name        = "GoAnywhere-${var.ENV}-${count.index + 1}"
   description = "Patchgroup ${count.index + 1}"
