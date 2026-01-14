@@ -1,5 +1,6 @@
 resource "aws_s3_bucket" "ssm_s3" {
-  bucket = "ssm-goanywhere-${var.ENV}"
+  bucket        = "ssm-goanywhere-${var.ENV}"
+  force_destroy = true
 }
 
 resource "aws_s3_bucket_versioning" "ssm_versioning" {
