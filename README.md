@@ -60,7 +60,7 @@ The following environment variables are used to control the application at run-t
 
 > ENV *: The environment in which to deploy the solution.
 - Default value: dev
-- Allowed values: pr, dev, test or prod
+- Allowed values: pr, dev, pre-prod or prod
 
 > EXTERNAL_ID *: External ID of the automation account role.
 - Default value: EXTERNAL_ID
@@ -68,13 +68,13 @@ The following environment variables are used to control the application at run-t
 > FSX_STORAGE_CAPACITY *: The storage capacity of the FSx file system in GB.
 - Default value: 32
 
-> FSX_THROUGHPUT_CAPACITY *: External ID of the automation account role.
+> FSX_THROUGHPUT_CAPACITY *: The throughput capacity of the FSx file system in MB/s.
 - Default value: 32
 
-> INSTANCE_TYPE *: The instance type for the windows VM.
+> INSTANCE_TYPE *: The instance type for the EC2 VM.
 - Default value: r6i.large
 
-> MFT_CLUSTER *: The throughput capacity of the FSx file system in MB/s.
+> MFT_CLUSTER *: Whether to deploy a clustered MFT environment.
 - Default value: TRUE
 
 > ROLE_ARN *: ARN of the role used by terraform.

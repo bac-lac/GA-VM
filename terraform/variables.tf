@@ -148,7 +148,7 @@ variable "INSTANCE_TYPE" {
 
 variable "MFT_CLUSTER" {
   type = string
-  description = "If set to true, this will start the application in cluster mode."
+  description = "Whether to deploy a clustered MFT environment."
   default = "TRUE"
 }
 

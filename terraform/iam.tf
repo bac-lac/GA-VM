@@ -129,12 +129,12 @@ resource "aws_s3_bucket_policy" "ssm_s3_policy" {
 # SSM QUICKSETUP ROLES
 data "aws_iam_policy_document" "qs_exec_assume_role" {
   statement {
-    effect = "Allow"
+    effect        = "Allow"
     principals {
       type        = "AWS"
       identifiers = [aws_iam_role.ssm_qs_admin_role.arn]
     }
-    actions = ["sts:AssumeRole"]
+    actions       = ["sts:AssumeRole"]
   }
 }
 
@@ -150,10 +150,10 @@ resource "aws_iam_role_policy_attachment" "ssm_qs_exec_attach" {
 }
 
 resource "aws_iam_role" "ssm_qs_admin_role" {
-  name          = "AWS-QuickSetup-GA-LocalAdministrationRole-${var.ENV}"
-  description   = "Local Admin role for AWS SSM Quick Setup (GA)"
+  name        = "AWS-QuickSetup-GA-LocalAdministrationRole-${var.ENV}"
+  description = "Local Admin role for AWS SSM Quick Setup (GA)"
   assume_role_policy = jsonencode({
-    Version = "2012-10-17",
+    Version   = "2012-10-17",
     Statement = [
       {
         "Effect": "Allow",
@@ -175,18 +175,16 @@ resource "aws_iam_role" "ssm_qs_admin_role" {
 }
 
 data "aws_iam_policy_document" "ssm_qs_admin_permissions" {
-  version = "2012-10-17"
+  version     = "2012-10-17"
   statement {
-    actions = [
-        "sts:AssumeRole"
-    ]
+    actions   = ["sts:AssumeRole"]
     resources = [aws_iam_role.ssm_qs_exec_role.arn]
-    effect = "Allow"
+    effect    = "Allow"
   }
 }
 
 resource "aws_iam_policy" "qs_admin_policy" {
-  name        = "AWS-QuickSetup-GA-LocalAdministrationRole-policy-${var.ENV}"
+  name        = "AWS-QuickSetup-GA-LocalAdministrationRole-policy"
   description = "Permissions for Quick Setup local admin role"
   policy      = data.aws_iam_policy_document.ssm_qs_admin_permissions.json
 }
