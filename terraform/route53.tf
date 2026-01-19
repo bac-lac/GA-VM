@@ -1,5 +1,5 @@
 resource "aws_route53_zone" "private" {
-  name = bac-lac.local
+  name = "bac-lac.local"
 
   vpc {
     vpc_id = data.aws_vpc.vpc.id
