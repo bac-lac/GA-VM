@@ -1,5 +1,5 @@
 resource "aws_secretsmanager_secret" "ssh_private" {
-  name       = "ssh/private-key"
+  name       = "ec2/key-pair"
 }
 
 resource "aws_secretsmanager_secret_version" "ssh_private_version" {
