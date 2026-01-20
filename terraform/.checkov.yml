@@ -11,3 +11,5 @@ skip-check:
     - CKV2_AWS_62   # Ensure S3 buckets should have event notifications enabled
     - CKV_AWS_18    # Ensure the S3 bucket has access logging enabled
     - CKV_AWS_145   # Ensure that S3 buckets are encrypted with KMS by default
+    - CKV2_AWS_57   # Ensure Secrets Manager secrets should have automatic rotation enabled
+    - CKV_AWS_149   # Ensure that Secrets Manager secrets are encrypted with KMS CMK
