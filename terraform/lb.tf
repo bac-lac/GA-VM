@@ -2,45 +2,6 @@ data "aws_lb" "ga_alb"{
   name = "ga-alb-${var.ENV}"
 }
 
-resource "aws_lb_listener" "http" {
-  load_balancer_arn = data.aws_lb.ga_alb.arn
-  port              = 80
-  protocol          = "HTTP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.tg.arn
-  }
-}
-
-resource "aws_lb_target_group" "tg" {
-  name        = "MFT-tg"
-  port        = 80
-  protocol    = "HTTP"
-  vpc_id      = data.aws_vpc.vpc.id
-  target_type = "instance"
-
-  health_check {
-    path                = "/"
-    protocol            = "HTTP"
-    port                = "traffic-port"
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
-    interval            = 30
-    timeout             = 5
-    matcher             = "200-399"
-  }
-
-  tags = { Name = "MFT-tg" }
-}
-
-resource "aws_lb_target_group_attachment" "tga" {
-  count            = local.count
-  target_group_arn = aws_lb_target_group.tg.arn
-  target_id        = aws_instance.app[count.index].id
-  port             = 80
-}
-
 resource "aws_lb_listener" "https" {
   load_balancer_arn   = data.aws_lb.ga_alb.arn
   port                = "443"
@@ -62,7 +23,7 @@ resource "aws_lb_listener_rule" "admin_rule" {
   listener_arn        = aws_lb_listener.https.arn
   action {
     type              = "forward"
-    target_group_arn  = aws_lb_target_group.ga_tg_443.arn
+    target_group_arn  = aws_lb_target_group.ga_tg_8001.arn
   }
   condition {
     host_header {
@@ -74,9 +35,9 @@ resource "aws_lb_listener_rule" "admin_rule" {
   }
 }
 
-resource "aws_lb_target_group" "ga_tg_443" {
-  name        = "ga-tg-${var.ENV}-443"
-  port        = 443
+resource "aws_lb_target_group" "ga_tg_8001" {
+  name        = "ga-tg-${var.ENV}-8001"
+  port        = 8001
   protocol    = "HTTPS"
   target_type = "instance"
   vpc_id      = data.aws_vpc.vpc.id
@@ -95,11 +56,11 @@ resource "aws_lb_target_group" "ga_tg_443" {
   }
 }
 
-resource "aws_lb_target_group_attachment" "tga_443" {
+resource "aws_lb_target_group_attachment" "tga_8001" {
   count            = local.count
-  target_group_arn = aws_lb_target_group.ga_tg_443.arn
+  target_group_arn = aws_lb_target_group.ga_tg_8001.arn
   target_id        = aws_instance.app[count.index].id
-  port             = 443
+  port             = 8001
 }
 
 resource "aws_lb_listener_rule" "web_client_rule" {
@@ -118,16 +79,16 @@ resource "aws_lb_listener_rule" "web_client_rule" {
   }
 }
 
-resource "aws_lb_target_group" "ga_tg_8443" {
-  name        = "ga-tg-${var.ENV}-8443"
-  port        = 8443
+resource "aws_lb_target_group" "ga_tg_443" {
+  name        = "ga-tg-${var.ENV}-443"
+  port        = 443
   protocol    = "HTTPS"
   target_type = "instance"
   vpc_id      = data.aws_vpc.vpc.id
   health_check {
     path      = "/"
     matcher   = "200,302"
-    port      = 8443
+    port      = 443
     protocol  = "HTTPS"
   }
   stickiness {
@@ -139,11 +100,11 @@ resource "aws_lb_target_group" "ga_tg_8443" {
   }
 }
 
-resource "aws_lb_target_group_attachment" "tga_8443" {
+resource "aws_lb_target_group_attachment" "tga_443" {
   count            = local.count
-  target_group_arn = aws_lb_target_group.ga_tg_8443.arn
+  target_group_arn = aws_lb_target_group.ga_tg_443.arn
   target_id        = aws_instance.app[count.index].id
-  port             = 8443
+  port             = 443
 }
 
 data "aws_lb" "ga_nlb"{

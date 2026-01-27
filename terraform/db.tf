@@ -8,6 +8,7 @@ resource "aws_db_instance" "ga_mysql" {
   apply_immediately                   = true
   auto_minor_version_upgrade          = true
   backup_retention_period             = 35
+  backup_window                       = "07:00-08:00" 
   copy_tags_to_snapshot               = true
   db_name                             = "ga${var.ENV}"
   deletion_protection                 = true

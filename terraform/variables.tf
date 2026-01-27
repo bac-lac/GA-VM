@@ -112,7 +112,7 @@ variable "DLM_RETENTION_DAYS" {
 variable "DLM_START_TIME" {
   type = string
   description = "The start time for the data lifecycle manager schedule."
-  default = "04:00"
+  default = "07:00"
 }
 
 variable "ENV" {
