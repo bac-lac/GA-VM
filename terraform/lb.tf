@@ -131,7 +131,7 @@ resource "aws_lb_target_group" "ga_tg_22" {
   target_type = "instance"
   vpc_id      = data.aws_vpc.vpc.id
   health_check {
-    port      = 8022
+    port      = 22
     protocol  = "TCP"
   }
   tags = {
