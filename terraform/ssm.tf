@@ -135,42 +135,17 @@ resource "aws_ssm_association" "start_cw_agent" {
   schedule_expression  = "rate(24 hours)"
   compliance_severity  = "CRITICAL"
 
-
-
-
-parameters = {
-    commands = <<'POWERSHELL'
-Set-StrictMode -Version Latest; $ErrorActionPreference = 'Stop'
-
-$configPath = 'C:\ProgramData\Amazon\AmazonCloudWatchAgent\amazon-cloudwatch-agent.json'
-New-Item -ItemType Directory -Force -Path (Split-Path $configPath) | Out-Null
-
-# Minimal, known-good metrics config (escape Terraform so agent macro stays literal)
-$config = @"
-{
-  "agent": { "metrics_collection_interval": 60 },
-  "metrics": {
-    "append_dimensions": { "InstanceId": "$${!aws:InstanceId}" },
-    "metrics_collected": {
-      "Processor":   { "measurement": ["% Processor Time"], "resources": ["*"] },
-      "Memory":      { "measurement": ["% Committed Bytes In Use"] },
-      "LogicalDisk": { "measurement": ["% Free Space"], "resources": ["*"] }
-    }
+  parameters = {
+    commands = jsonencode([
+      "Set-StrictMode -Version Latest; $ErrorActionPreference = 'Stop'",
+      "$configPath = 'C:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent.json'",
+      "New-Item -ItemType Directory -Force -Path (Split-Path $configPath) | Out-Null",
+      "$config = @'{\"agent\":{\"metrics_collection_interval\":60},\"metrics\":{\"append_dimensions\":{\"InstanceId\":\"$${!aws:InstanceId}\"},\"metrics_collected\":{\"Processor\":{\"measurement\":[\"% Processor Time\"],\"resources\":[\"*\"]},\"Memory\":{\"measurement\":[\"% Committed Bytes In Use\"]},\"LogicalDisk\":{\"measurement\":[\"% Free Space\"],\"resources\":[\"*\"]}}}}'@",
+      "$config | Out-File -Encoding ascii $configPath",
+      "New-Item -ItemType Directory -Force -Path 'C:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\Logs' | Out-Null",
+      "$ctl = 'C:\\Program Files\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent-ctl.ps1'",
+      "& $ctl -a fetch-config -m ec2 -c file:$configPath -s",
+      "& $ctl -a status"
+    ])
   }
-}
-"@
-
-# Write as ASCII (avoid UTF-8 BOM issues on Windows)
-$config | Out-File -Encoding ascii $configPath
-
-# Ensure Logs dir exists (sometimes needed before first start)
-New-Item -ItemType Directory -Force -Path 'C:\ProgramData\Amazon\AmazonCloudWatchAgent\Logs' | Out-Null
-
-$ctl = 'C:\Program Files\Amazon\AmazonCloudWatchAgent\amazon-cloudwatch-agent-ctl.ps1'
-& $ctl -a fetch-config -m ec2 -c file:$configPath -s
-& $ctl -a status
-POWERSHELL
-  }
-
-
 }
