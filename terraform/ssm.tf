@@ -146,7 +146,7 @@ parameters = {
 
       # Minimal metrics-only config: CPU, Memory, Disk
       # You can extend this block later to add logs/windows_events.
-      "$config = @'{\"agent\":{\"metrics_collection_interval\":60},\"metrics\":{\"append_dimensions\":{\"InstanceId\":\"${!aws:InstanceId}\"},\"metrics_collected\":{\"Processor\":{\"measurement\":[\"% Processor Time\"],\"resources\":[\"*\"]},\"Memory\":{\"measurement\":[\"% Committed Bytes In Use\"]},\"LogicalDisk\":{\"measurement\":[\"% Free Space\"],\"resources\":[\"*\"]}}}}'@",
+      "$config = @'{\"agent\":{\"metrics_collection_interval\":60},\"metrics\":{\"append_dimensions\":{\"InstanceId\":\"$${!aws:InstanceId}\"},\"metrics_collected\":{\"Processor\":{\"measurement\":[\"% Processor Time\"],\"resources\":[\"*\"]},\"Memory\":{\"measurement\":[\"% Committed Bytes In Use\"]},\"LogicalDisk\":{\"measurement\":[\"% Free Space\"],\"resources\":[\"*\"]}}}}'@",
 
       # Write as ASCII to avoid BOM issues
       "$config | Out-File -Encoding ascii $configPath",
