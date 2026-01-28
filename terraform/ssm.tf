@@ -145,10 +145,11 @@ locals {
         }
       },
       append_dimensions = {
-        InstanceId = "$${aws:InstanceId}"
-        ImageId    = "$${aws:ImageId}"
-        InstanceType = "$${aws:InstanceType}"
+        InstanceId = "${aws:InstanceId}"
+        ImageId    = "${aws:ImageId}"
+        InstanceType = "${aws:InstanceType}"
     }
+  }
   })
 }
 
