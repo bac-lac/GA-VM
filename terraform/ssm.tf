@@ -129,10 +129,6 @@ resource "aws_ssm_association" "install_cw_agent" {
 # Cloudwatch agent
 locals {
   cwagent_windows_config = jsonencode({
-    agent: {
-    metrics_collection_interval: 60,
-    logfile: "c:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\Logs\\amazon-cloudwatch-agent.log"
-    },
     metrics = {
       namespace = "CWAgent"
       metrics_collected = {
@@ -147,23 +143,12 @@ locals {
             {name: "Available MBytes", "unit": "Megabytes"}
           ]
         }
-      }
+      },
+      append_dimensions = {
+        InstanceId = "${aws:InstanceId}"
+        ImageId    = "${aws:ImageId}"
+        InstanceType = "${aws:InstanceType}"
     }
-    logs = {
-      logs_collected = {
-        files = {
-          collect_list = [
-            {
-              file_path: "c:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\Logs\\amazon-cloudwatch-agent.log",
-              log_group_name: "amazon-cloudwatch-agent",
-              log_stream_name: "amazon-cloudwatch-agent-{instance_id}-{local_hostname}",
-              timezone: "UTC"
-            }
-          ]
-        }
-      }
-    },
-    log_stream_name: "log_stream_name"
   })
 }
 
@@ -182,16 +167,12 @@ resource "aws_ssm_association" "cwagent_start_windows_ssm_param" {
     key       = "tag:Monitoring"
     values    = ["enabled"]
   }
-  # Optional: re-run periodically to enforce state (idempotent)
   schedule_expression = "rate(30 minutes)"
-
-  # This is the Run Command parameter schema for AWS-RunPowerShellScript
+  compliance_severity = "CRITICAL"
   parameters = {
     commands  = join("\n", [
-    "$ctl = 'C:\\Program Files\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent-ctl.ps1'",
+      "$ctl = 'C:\\Program Files\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent-ctl.ps1'",
       "& $ctl -a fetch-config -m ec2 -c ssm:/GoAnywhere-pr/ec2/amazon-cloudwatch-agent/config/windows -s"
     ])
   }
-
-  compliance_severity = "CRITICAL"
 }
