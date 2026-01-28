@@ -187,10 +187,10 @@ resource "aws_ssm_association" "cwagent_start_windows_ssm_param" {
 
   # This is the Run Command parameter schema for AWS-RunPowerShellScript
   parameters = {
-    commands = [
-      "$ctl = 'C:\\Program Files\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent-ctl.ps1'",
+    commands  = join("\n", [
+    "$ctl = 'C:\\Program Files\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent-ctl.ps1'",
       "& $ctl -a fetch-config -m ec2 -c ssm:/GoAnywhere-pr/ec2/amazon-cloudwatch-agent/config/windows -s"
-    ]
+    ])
   }
 
   compliance_severity = "CRITICAL"
