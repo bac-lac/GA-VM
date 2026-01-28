@@ -126,22 +126,72 @@ resource "aws_ssm_association" "install_cw_agent" {
   }
 }
 
-resource "aws_ssm_association" "create_default_agent_json" {
-  name        = "AWS-RunPowerShellScript"
-  targets {
-    key       = "tag:Monitoring"
-    values    = ["enabled"]
-  }
-  schedule_expression  = "rate(24 hours)"
-  compliance_severity  = "CRITICAL"
+# Cloudwatch agent
+locals {
+  cwagent_windows_config = jsonencode({
+    agent: {
+    metrics_collection_interval: 60,
+    logfile: "c:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\Logs\\amazon-cloudwatch-agent.log"
+    },
+    metrics = {
+      namespace = "CWAgent"
+      metrics_collected = {
+        LogicalDisk = {
+          measurement = [
+            {name: "% Free Space", "unit": "Percent"}
+          ]
+          resources = ["*"]
+        }
+        Memory = {
+          measurement = [
+            {name: "Available MBytes", "unit": "Megabytes"}
+          ]
+        }
+      }
+    }
+    logs = {
+      logs_collected = {
+        files = {
+          collect_list = [
+            {
+              file_path: "c:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\Logs\\amazon-cloudwatch-agent.log",
+              log_group_name: "amazon-cloudwatch-agent",
+              log_stream_name: "amazon-cloudwatch-agent-{instance_id}-{local_hostname}",
+              timezone: "UTC"
+            }
+          ]
+        }
+      }
+    },
+    log_stream_name: "log_stream_name"
+  })
+}
 
-  parameters = {
-    commands = jsonencode([
-      "Set-StrictMode -Version Latest; $ErrorActionPreference = 'Stop'",
-      "$configPath = 'C:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent.json'",
-      "New-Item -ItemType Directory -Force -Path (Split-Path $configPath) | Out-Null",
-      "$config = @'{\"agent\":{\"metrics_collection_interval\":60},\"metrics\":{\"append_dimensions\":{\"InstanceId\":\"$${!aws:InstanceId}\"},\"metrics_collected\":{\"Processor\":{\"measurement\":[\"% Processor Time\"],\"resources\":[\"*\"]},\"Memory\":{\"measurement\":[\"% Committed Bytes In Use\"]},\"LogicalDisk\":{\"measurement\":[\"% Free Space\"],\"resources\":[\"*\"]}}}}'@",
-      "$config | Out-File -Encoding ascii $configPath"
-    ])
-  }
+resource "aws_ssm_parameter" "cwagent_config_windows" {
+  name        = "/GoAnywhere-${var.ENV}/ec2/amazon-cloudwatch-agent/config/windows"
+  description = "CloudWatch Agent config for Windows instances"
+  type        = "SecureString"
+  value       = local.cwagent_windows_config
+  tier        = "Standard"
+}
+
+resource "aws_ssm_document" "cwagent_install_configure_windows" {
+  name          = "CWAgent-InstallConfigure-Windows"
+  document_type = "Command"
+
+  content = jsonencode({
+    schemaVersion = "2.2",
+    description   = "Install Amazon CloudWatch Agent on Windows, write config from SSM Parameter Store, and start the service",
+    mainSteps     = [
+      {
+        name   = "FetchConfigFromParameterStore",
+        action = "aws:downloadContent",
+        inputs = {
+          sourceType       = "SSMParameter",
+          sourceInfo       = jsonencode({ name = "/GoAnywhere-${var.ENV}/ec2/amazon-cloudwatch-agent/config/windows" }),
+          destinationPath  = "C:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent.json"
+        }
+      }
+    ]
+  })
 }
