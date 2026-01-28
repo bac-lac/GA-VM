@@ -132,10 +132,22 @@ resource "aws_ssm_association" "start_cw_agent" {
     key       = "tag:Monitoring"
     values    = ["enabled"]
   }
-  parameters  = {
-    commands  = join("\n", [
-    "Start-Service AmazonCloudWatchAgent",
-    "Set-Service -Name AmazonCloudWatchAgent -StartupType Automatic"
-  ])
+  schedule_expression  = "rate(24 hours)"
+  compliance_severity  = "CRITICAL"
+
+  parameters = {
+    commands = jsonencode([
+      "Set-StrictMode -Version Latest; $ErrorActionPreference = 'Stop'",
+      "$configPath = 'C:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent.json'",
+      "$configDir  = Split-Path $configPath",
+      "New-Item -ItemType Directory -Force -Path $configDir | Out-Null",
+      "$config = @'{\"agent\":{\"metrics_collection_interval\":60},\"metrics\":{\"append_dimensions\":{\"InstanceId\":\"${aws:InstanceId}\"},\"metrics_collected\":{\"Memory\":{\"measurement\":[\"% Committed Bytes In Use\"]},\"LogicalDisk\":{\"measurement\":[\"% Free Space\"],\"resources\":[\"*\"]}}}}'@",
+      "$config | Out-File -Encoding ascii $configPath",
+      "New-Item -ItemType Directory -Force -Path 'C:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\Logs' | Out-Null",
+      "$ctl = 'C:\\Program Files\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent-ctl.ps1'",
+      "& $ctl -a fetch-config -m ec2 -c file:$configPath -s",
+      "& $ctl -a status"
+    ])
   }
+
 }
