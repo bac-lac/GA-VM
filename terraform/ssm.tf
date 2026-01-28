@@ -126,7 +126,7 @@ resource "aws_ssm_association" "install_cw_agent" {
   }
 }
 
-resource "aws_ssm_association" "start_cw_agent" {
+resource "aws_ssm_association" "create_default_agent_json" {
   name        = "AWS-RunPowerShellScript"
   targets {
     key       = "tag:Monitoring"
@@ -141,11 +141,7 @@ resource "aws_ssm_association" "start_cw_agent" {
       "$configPath = 'C:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent.json'",
       "New-Item -ItemType Directory -Force -Path (Split-Path $configPath) | Out-Null",
       "$config = @'{\"agent\":{\"metrics_collection_interval\":60},\"metrics\":{\"append_dimensions\":{\"InstanceId\":\"$${!aws:InstanceId}\"},\"metrics_collected\":{\"Processor\":{\"measurement\":[\"% Processor Time\"],\"resources\":[\"*\"]},\"Memory\":{\"measurement\":[\"% Committed Bytes In Use\"]},\"LogicalDisk\":{\"measurement\":[\"% Free Space\"],\"resources\":[\"*\"]}}}}'@",
-      "$config | Out-File -Encoding ascii $configPath",
-      "New-Item -ItemType Directory -Force -Path 'C:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\Logs' | Out-Null",
-      "$ctl = 'C:\\Program Files\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent-ctl.ps1'",
-      "& $ctl -a fetch-config -m ec2 -c file:$configPath -s",
-      "& $ctl -a status"
+      "$config | Out-File -Encoding ascii $configPath"
     ])
   }
 }
