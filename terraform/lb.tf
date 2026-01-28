@@ -13,8 +13,8 @@ resource "aws_lb_listener" "https" {
 
     fixed_response {
       content_type = "text/plain"
-      message_body = "Default response content"
-      status_code  = "200"
+      message_body = "Invalid host header."
+      status_code  = "400"
     }
   }
 }
