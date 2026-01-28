@@ -175,23 +175,25 @@ resource "aws_ssm_parameter" "cwagent_config_windows" {
   tier        = "Standard"
 }
 
-resource "aws_ssm_document" "cwagent_install_configure_windows" {
-  name          = "CWAgent-InstallConfigure-Windows"
-  document_type = "Command"
 
-  content = jsonencode({
-    schemaVersion = "2.2",
-    description   = "Install Amazon CloudWatch Agent on Windows, write config from SSM Parameter Store, and start the service",
-    mainSteps     = [
-      {
-        name   = "FetchConfigFromParameterStore",
-        action = "aws:downloadContent",
-        inputs = {
-          sourceType       = "SSMParameter",
-          sourceInfo       = jsonencode({ name = "/GoAnywhere-${var.ENV}/ec2/amazon-cloudwatch-agent/config/windows" }),
-          destinationPath  = "C:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent.json"
-        }
-      }
-    ]
-  })
+resource "aws_ssm_association" "cwagent_start_windows_ssm_param" {
+  name = "AWS-RunPowerShellScript"
+  targets {
+    key       = "tag:Monitoring"
+    values    = ["enabled"]
+  }
+  # Optional: re-run periodically to enforce state (idempotent)
+  schedule_expression = "rate(30 minutes)"
+
+  # This is the Run Command parameter schema for AWS-RunPowerShellScript
+  parameters = {
+    commands = jsonencode([
+      "Set-StrictMode -Version Latest; $ErrorActionPreference = 'Stop'",
+      "$ctl = 'C:\\Program Files\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent-ctl.ps1'",
+      "& $ctl -a fetch-config -m ec2 -c ssm:/GoAnywhere-${var.ENV}/ec2/amazon-cloudwatch-agent/config/windows -s",
+      "& $ctl -a status"
+    ])
+  }
+
+  compliance_severity = "CRITICAL"
 }
