@@ -135,19 +135,33 @@ resource "aws_ssm_association" "start_cw_agent" {
   schedule_expression  = "rate(24 hours)"
   compliance_severity  = "CRITICAL"
 
-  parameters = {
+
+parameters = {
     commands = jsonencode([
       "Set-StrictMode -Version Latest; $ErrorActionPreference = 'Stop'",
+
       "$configPath = 'C:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent.json'",
       "$configDir  = Split-Path $configPath",
       "New-Item -ItemType Directory -Force -Path $configDir | Out-Null",
+
+      # Minimal metrics-only config: CPU, Memory, Disk
+      # You can extend this block later to add logs/windows_events.
       "$config = @'{\"agent\":{\"metrics_collection_interval\":60},\"metrics\":{\"append_dimensions\":{\"InstanceId\":\"${!aws:InstanceId}\"},\"metrics_collected\":{\"Processor\":{\"measurement\":[\"% Processor Time\"],\"resources\":[\"*\"]},\"Memory\":{\"measurement\":[\"% Committed Bytes In Use\"]},\"LogicalDisk\":{\"measurement\":[\"% Free Space\"],\"resources\":[\"*\"]}}}}'@",
+
+      # Write as ASCII to avoid BOM issues
       "$config | Out-File -Encoding ascii $configPath",
+
+      # Ensure Logs directory exists
       "New-Item -ItemType Directory -Force -Path 'C:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\Logs' | Out-Null",
+
+      # Control script path
       "$ctl = 'C:\\Program Files\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent-ctl.ps1'",
+
+      # Apply the local file config and start the agent (idempotent)
       "& $ctl -a fetch-config -m ec2 -c file:$configPath -s",
+
+      # Optional: print status to command output
       "& $ctl -a status"
     ])
   }
-
 }
