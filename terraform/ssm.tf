@@ -145,9 +145,9 @@ locals {
         }
       },
       append_dimensions = {
-        InstanceId = "${aws:InstanceId}"
-        ImageId    = "${aws:ImageId}"
-        InstanceType = "${aws:InstanceType}"
+        InstanceId = "$${aws:InstanceId}"
+        ImageId    = "$${aws:ImageId}"
+        InstanceType = "$${aws:InstanceType}"
     }
   }
   })
@@ -173,7 +173,7 @@ resource "aws_ssm_association" "cwagent_start_windows_ssm_param" {
   parameters = {
     commands  = join("\n", [
       "$ctl = 'C:\\Program Files\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent-ctl.ps1'",
-      "& $ctl -a fetch-config -m ec2 -c ssm:/GoAnywhere-pr/ec2/amazon-cloudwatch-agent/config/windows -s"
+      "& $ctl -a fetch-config -m ec2 -c ssm:/GoAnywhere-${var.ENV}/ec2/amazon-cloudwatch-agent/config/windows -s"
     ])
   }
 }
