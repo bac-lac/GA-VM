@@ -140,7 +140,7 @@ locals {
         }
         Memory = {
           measurement = [
-            {name: "Available MBytes", "unit": "Megabytes"}
+            {name: "% Committed Bytes In Use", "unit": "Percent"}
           ]
         }
       },
@@ -151,16 +151,16 @@ locals {
     }
   }
   })
+  cwagent_name = "/GoAnywhere-${var.ENV}/ec2/amazon-cloudwatch-agent/config/windows"
 }
 
 resource "aws_ssm_parameter" "cwagent_config_windows" {
-  name        = "/GoAnywhere-${var.ENV}/ec2/amazon-cloudwatch-agent/config/windows"
+  name        = local.cwagent_name
   description = "CloudWatch Agent config for Windows instances"
   type        = "SecureString"
   value       = local.cwagent_windows_config
   tier        = "Standard"
 }
-
 
 resource "aws_ssm_association" "cwagent_start_windows_ssm_param" {
   name = "AWS-RunPowerShellScript"
@@ -168,12 +168,12 @@ resource "aws_ssm_association" "cwagent_start_windows_ssm_param" {
     key       = "tag:Monitoring"
     values    = ["enabled"]
   }
-  schedule_expression = "rate(30 minutes)"
+  schedule_expression = "rate(24 hours)"
   compliance_severity = "CRITICAL"
   parameters = {
     commands  = join("\n", [
       "$ctl = 'C:\\Program Files\\Amazon\\AmazonCloudWatchAgent\\amazon-cloudwatch-agent-ctl.ps1'",
-      "& $ctl -a fetch-config -m ec2 -c ssm:/GoAnywhere-${var.ENV}/ec2/amazon-cloudwatch-agent/config/windows -s"
+      "& $ctl -a fetch-config -m ec2 -c ssm:${local.cwagent_name} -s"
     ])
   }
 }
