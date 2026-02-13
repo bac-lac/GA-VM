@@ -25,6 +25,7 @@ resource "aws_db_instance" "ga_mysql" {
   password                            = var.ADMIN_DB_PASSWORD
   performance_insights_enabled        = true
   skip_final_snapshot                 = true
+  storage_type                        = "gp3"  
   storage_encrypted                   = true
   username                            = var.ADMIN_DB_USERNAME
   vpc_security_group_ids              = [data.aws_security_group.data.id]
