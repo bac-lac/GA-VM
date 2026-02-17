@@ -138,7 +138,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_storage_alarm" {
     instance                = "C:"
     objectname              = "LogicalDisk"
     InstanceType            = var.INSTANCE_TYPE
-    ImageId                 = data.aws_ami.windows.id
+    ImageId                 = var.AMI_ID
   }
   period                    = 60
   evaluation_periods        = 5
@@ -160,7 +160,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_ec2_memory_alarm" {
     InstanceId              = aws_instance.app[count.index].id
     objectname              = "Memory"
     InstanceType            = var.INSTANCE_TYPE
-    ImageId                 = data.aws_ami.windows.id
+    ImageId                 = var.AMI_ID
   }
   period                    = 60
   evaluation_periods        = 5
