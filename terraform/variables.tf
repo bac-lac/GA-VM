@@ -19,6 +19,12 @@ variable "ADMIN_DB_USERNAME" {
   default = "ADMIN_DB_USERNAME"
 }
 
+variable "AMI_ID" {
+  type = string
+  description = "The AMI ID for the application instances."
+  default = "AMI_ID"
+}
+
 variable "CERT_BODY" {
   type = string
   sensitive = true  

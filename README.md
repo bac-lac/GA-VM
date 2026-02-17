@@ -13,6 +13,9 @@ The following environment variables are used to control the application at run-t
 > ADMIN_DB_PASSWORD *: The DB password for the admin account.
 - Default value: ADMIN_DB_PASSWORD
 
+> AMI_ID *: The AMI ID for the application instances.
+- Default value: AMI_ID
+
 > CERT_BODY *: The certificate body.
 - Default value: CERT_BODY
 

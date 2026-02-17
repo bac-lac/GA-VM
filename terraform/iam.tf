@@ -139,7 +139,7 @@ data "aws_iam_policy_document" "qs_exec_assume_role" {
 }
 
 resource "aws_iam_role" "ssm_qs_exec_role" {
-  name               = "AWS-QuickSetup-GA-LocalExecutionRole-pr"
+  name               = "AWS-QuickSetup-GA-LocalExecutionRole-${var.ENV}"
   assume_role_policy = data.aws_iam_policy_document.qs_exec_assume_role.json
   description        = "Local Execution role for AWS SSM Quick Setup (GA)"
 }

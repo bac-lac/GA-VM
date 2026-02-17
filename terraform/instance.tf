@@ -1,19 +1,6 @@
-data "aws_ami" "windows" {
-  most_recent = true
-  owners      = ["amazon"]
-  filter {
-    name   = "name"
-    values = ["Windows_Server-2022-English-Full-Base-*"]
-  }
-  filter {
-    name   = "state"
-    values = ["available"]
-  }
-}
-
 resource "aws_instance" "app" {
   count                       = upper(var.MFT_CLUSTER) == "TRUE" ? 2 : 1
-  ami                         = data.aws_ami.windows.id
+  ami                         = var.AMI_ID
   instance_type               = var.INSTANCE_TYPE
   key_name                    = aws_key_pair.instance_key.key_name
   vpc_security_group_ids      = [data.aws_security_group.app.id]

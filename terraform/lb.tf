@@ -27,7 +27,7 @@ resource "aws_lb_listener_rule" "admin_portal_rule" {
   }
   condition {
     host_header {
-      values          = ["goanywhere-${var.ENV}.bac-lac.gc.ca"]
+      values          = [upper(var.ENV) == "PROD" ? "goanywhere.bac-lac.gc.ca" : "goanywhere-${var.ENV}.bac-lac.gc.ca"]
     }
   }
   tags = {
@@ -71,7 +71,7 @@ resource "aws_lb_listener_rule" "web_client_rule" {
   }
   condition {
     host_header {
-      values          = ["transfert-transfer-${var.ENV}.bac-lac.gc.ca"]
+      values          = [upper(var.ENV) == "PROD" ? "transfert-transfer.bac-lac.gc.ca" : "transfert-transfer-${var.ENV}.bac-lac.gc.ca"]
     }
   }
   tags = {
