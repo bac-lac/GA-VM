@@ -52,7 +52,7 @@ resource "aws_iam_role_policy_attachment" "cwagent_server" {
 }
 
 resource "aws_iam_instance_profile" "ssm_profile" {
-  name = "SSMInstanceProfile"
+  name = "SSMInstanceProfile-${var.ENV}"
   role = aws_iam_role.ssm_role.name
 }
 
@@ -73,7 +73,7 @@ data "aws_iam_policy_document" "patchpolicy_get_object" {
 }
 
 resource "aws_iam_policy" "s3_get_object_policy" {
-  name        = "aws-quicksetup-patchpolicy-baselineoverrides-s3"
+  name        = "aws-quicksetup-patchpolicy-baselineoverrides-s3-${var.ENV}"
   description = "Allow GetObject on aws-quicksetup-patchpolicy-* buckets"
   policy      = data.aws_iam_policy_document.patchpolicy_get_object.json
 }
@@ -184,7 +184,7 @@ data "aws_iam_policy_document" "ssm_qs_admin_permissions" {
 }
 
 resource "aws_iam_policy" "qs_admin_policy" {
-  name        = "AWS-QuickSetup-GA-LocalAdministrationRole-policy"
+  name        = "AWS-QuickSetup-GA-LocalAdministrationRole-policy-${var.ENV}"
   description = "Permissions for Quick Setup local admin role"
   policy      = data.aws_iam_policy_document.ssm_qs_admin_permissions.json
 }
@@ -196,7 +196,7 @@ resource "aws_iam_role_policy_attachment" "qs_admin_attach" {
 
 # DLM IAM ROLE
 resource "aws_iam_role" "dlm" {
-  name                = "dlm-default-ebs-snapshot-role"
+  name                = "dlm-default-ebs-snapshot-role-${var.ENV}"
   description         = "Provides access to EC2 for DLM"
   assume_role_policy  = jsonencode({
     Version           = "2012-10-17",
