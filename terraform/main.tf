@@ -7,9 +7,10 @@ terraform {
   }
 
   backend "s3" {
-    bucket      = "main-tfstate-c71307a3"
-    region      = "ca-central-1"
-    encrypt     = true
+    bucket        = "main-tfstate-c71307a3"
+    region        = "ca-central-1"
+    encrypt       = true
+    use_lockfile  = true
   }
 }
 

@@ -66,8 +66,7 @@ jobs:
 
       - name: Terraform-Init
         id: Init
-        run: terraform init 
-          -backend-config="dynamodb_table=main-tfstate-lock-1a6f390e" 
+        run: terraform init
           -backend-config="key=${{ inputs.environment }}/ga-vm/terraform.tfstate"
 
       - name: Terraform-Apply
