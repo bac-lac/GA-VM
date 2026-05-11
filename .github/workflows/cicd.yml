@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       
       - name: Checkov security scan
         uses: bridgecrewio/checkov-action@v12
@@ -41,10 +41,10 @@ jobs:
         working-directory: ./terraform
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ secrets.AWS_GITHUB_DEVOPS_ROLE }}
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
@@ -60,7 +60,7 @@ jobs:
 
       - name: Terraform-Setup
         id: Setup
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v4
         with:
           terraform_wrapper: true
 
