@@ -48,8 +48,14 @@ variable "CERT_PRIVATE_KEY" {
 
 variable "CLOUDWATCH_EMAIL" {
   type = string
-  description = "The email used for cloudwatch endpoint."
+  description = "The email used for cloudwatch endpoint (CloudOps)."
   default = "cloudwatch_email@domain.com"
+}
+
+variable "DAMS_EMAIL" {
+  type = string
+  description = "The email used for cloudwatch endpoint (DAMS)."
+  default = "dams_email@domain.com"
 }
 
 variable "DB_ALLOCATED_STORAGE" {
