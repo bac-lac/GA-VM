@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: "github_actions"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     groups:
       github-actions:
         patterns:
@@ -15,7 +15,7 @@ updates:
   - package-ecosystem: "terraform"
     directory: "/terraform"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     groups:
       terraform:
         patterns:
