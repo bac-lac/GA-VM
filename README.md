@@ -7,12 +7,6 @@ The following environment variables are used to control the application at run-t
 > ACCOUNT *: The AWS account number.
 - Default value: ACCOUNT
 
-> ADMIN_DB_USERNAME *: The DB username for the admin account.
-- Default value: ADMIN_DB_USERNAME
-
-> ADMIN_DB_PASSWORD *: The DB password for the admin account.
-- Default value: ADMIN_DB_PASSWORD
-
 > AMI_ID *: The AMI ID for the application instances.
 - Default value: AMI_ID
 
@@ -31,6 +25,12 @@ The following environment variables are used to control the application at run-t
 > DAMS_EMAIL *: The email used for cloudwatch endpoint (DAMS).
 - Default value: dams_email@domain.com
 
+> DB_ADMIN_USERNAME *: The DB username for the admin account.
+- Default value: DB_ADMIN_USERNAME
+
+> DB_ADMIN_PASSWORD *: The DB password for the admin account.
+- Default value: DB_ADMIN_PASSWORD
+
 > DB_ALLOCATED_STORAGE *: The allocated storage for the database in GB.
 - Default value: 20
 
@@ -48,12 +48,6 @@ The following environment variables are used to control the application at run-t
 
 > DB_MAINTENANCE_WINDOW *: The maintenance window for the database. (UTC)
 - Default value: sat:05:00-sat:06:00
-
-> DB_USERNAME *: The DB username for the application.
-- Default value: DB_USERNAME
-
-> DB_PASSWORD *: The DB password for the application.
-- Default value: DB_PASSWORD
 
 > DIRECTORY_ADMIN_PASSWORD *: The admin password for the directory service.
 - Default value: DIRECTORY_ADMIN_PASSWORD
