@@ -5,6 +5,20 @@ variable "ACCOUNT" {
   default = "ACCOUNT"
 }
 
+variable "ADMIN_DB_PASSWORD" {
+  type = string
+  sensitive = true
+  description = "The DB password for the admin account."
+  default = "ADMIN_DB_PASSWORD"
+}
+
+variable "ADMIN_DB_USERNAME" {
+  type = string
+  sensitive = true
+  description = "The DB username for the admin account."
+  default = "ADMIN_DB_USERNAME"
+}
+
 variable "AMI_ID" {
   type = string
   description = "The AMI ID for the application instances."
@@ -78,20 +92,6 @@ variable "DB_MAINTENANCE_WINDOW" {
   type = string
   description = "The maintenance window for the database. (UTC)"
   default = "sat:05:00-sat:06:00"
-}
-
-variable "DB_ADMIN_PASSWORD" {
-  type = string
-  sensitive = true
-  description = "The DB password for the admin account."
-  default = "DB_ADMIN_PASSWORD"
-}
-
-variable "DB_ADMIN_USERNAME" {
-  type = string
-  sensitive = true
-  description = "The DB username for the admin account."
-  default = "DB_ADMIN_USERNAME"
 }
 
 variable "DIRECTORY_ADMIN_PASSWORD" {
