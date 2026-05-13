@@ -8,7 +8,7 @@ resource "aws_db_instance" "ga_mysql" {
   apply_immediately                   = true
   auto_minor_version_upgrade          = true
   backup_retention_period             = 35
-  backup_window                       = "07:00-08:00" 
+  backup_window                       = var.DB_BACKUP_WINDOW
   copy_tags_to_snapshot               = true
   db_name                             = "ga${var.ENV}"
   deletion_protection                 = true
@@ -19,7 +19,7 @@ resource "aws_db_instance" "ga_mysql" {
   iam_database_authentication_enabled = true
   identifier                          = "ga-db-${var.ENV}"
   instance_class                      = var.DB_INSTANCE_CLASS
-  maintenance_window                  = "sat:05:00-sat:06:00" 
+  maintenance_window                  = var.DB_MAINTENANCE_WINDOW
   monitoring_interval                 = 5
   monitoring_role_arn                 = aws_iam_role.ga_rds_monitoring_role.arn
   password                            = var.ADMIN_DB_PASSWORD

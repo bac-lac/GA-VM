@@ -34,6 +34,9 @@ The following environment variables are used to control the application at run-t
 > DB_ALLOCATED_STORAGE *: The allocated storage for the database in GB.
 - Default value: 20
 
+> DB_BACKUP_WINDOW *: The backup window for the database. (UTC)
+- Default value: 07:00-08:00
+
 > DB_ENGINE_VERSION *: The database engine version for the application.
 - Default value: 8.4
 
@@ -42,6 +45,9 @@ The following environment variables are used to control the application at run-t
 
 > DB_INSTANCE_CLASS_MEMORY *: The database intance class available memory in GB.
 - Default value: 4
+
+> DB_MAINTENANCE_WINDOW *: The maintenance window for the database. (UTC)
+- Default value: sat:05:00-sat:06:00
 
 > DB_USERNAME *: The DB username for the application.
 - Default value: DB_USERNAME
