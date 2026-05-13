@@ -22,11 +22,11 @@ resource "aws_db_instance" "ga_mysql" {
   maintenance_window                  = var.DB_MAINTENANCE_WINDOW
   monitoring_interval                 = 5
   monitoring_role_arn                 = aws_iam_role.ga_rds_monitoring_role.arn
-  password                            = var.DB_ADMIN_PASSWORD
+  password                            = var.ADMIN_DB_PASSWORD
   performance_insights_enabled        = true
   skip_final_snapshot                 = true
   storage_type                        = "gp3"  
   storage_encrypted                   = true
-  username                            = var.DB_ADMIN_USERNAME
+  username                            = var.ADMIN_DB_USERNAME
   vpc_security_group_ids              = [data.aws_security_group.data.id]
 }
