@@ -67,7 +67,7 @@ variable "DB_ALLOCATED_STORAGE" {
 variable "DB_BACKUP_WINDOW" {
   type = string
   description = "The backup window for the database. (UTC)"
-  default = "07:00-09:00"
+  default = "07:00-08:00"
 }
 
 variable "DB_ENGINE_VERSION" {
