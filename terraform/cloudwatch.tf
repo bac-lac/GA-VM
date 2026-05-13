@@ -181,7 +181,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_nlb_22_alarm" {
   period                    = 60
   evaluation_periods        = 5
   datapoints_to_alarm       = 5
-  threshold                 = 1
+  threshold                 = upper(var.MFT_CLUSTER) == "TRUE" ? 2 : 1
   treat_missing_data        = "missing"
   alarm_description         = "This metric monitors NLB port 22 (SFTP) ${var.ENV} health"
 }
@@ -197,7 +197,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_alb_8001_alarm" {
   period                    = 60
   evaluation_periods        = 5
   datapoints_to_alarm       = 5
-  threshold                 = 1
+  threshold                 = upper(var.MFT_CLUSTER) == "TRUE" ? 2 : 1
   treat_missing_data        = "missing"
   alarm_description         = "This metric monitors ALB port 8001 (admin portal) ${var.ENV} health"
 }
@@ -213,7 +213,7 @@ resource "aws_cloudwatch_metric_alarm" "ga_cw_alb_443_alarm" {
   period                    = 60
   evaluation_periods        = 5
   datapoints_to_alarm       = 5
-  threshold                 = 1
+  threshold                 = upper(var.MFT_CLUSTER) == "TRUE" ? 2 : 1
   treat_missing_data        = "missing"
   alarm_description         = "This metric monitors ALB port 443 (web client) ${var.ENV} health"
 }
