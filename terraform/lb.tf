@@ -35,6 +35,22 @@ resource "aws_lb_listener_rule" "admin_portal_rule" {
   }
 }
 
+resource "aws_lb_listener_rule" "internal_admin_portal_rule" {
+  listener_arn        = aws_lb_listener.https.arn
+  action {
+    type              = "forward"
+    target_group_arn  = aws_lb_target_group.ga_tg_8001.arn
+  }
+  condition {
+    host_header {
+      values          = [upper(var.ENV) == "PROD" ? "ga-internal.bac-lac.gc.ca" : "ga-${var.ENV}-internal.bac-lac.gc.ca"]
+    }
+  }
+  tags = {
+    Name = "Internal-Admin-${var.ENV}"
+  }
+}
+
 resource "aws_lb_target_group" "ga_tg_8001" {
   name        = "ga-tg-${var.ENV}-8001"
   port        = 8001
