@@ -162,6 +162,41 @@ resource "aws_lb_target_group_attachment" "ga_tga_22" {
   port             = 22
 }
 
+resource "aws_lb_listener" "agent" {
+  load_balancer_arn   = data.aws_lb.ga_nlb.arn
+  port                = "8009"
+  protocol            = "TCP"
+  default_action {
+    type              = "forward"
+    target_group_arn  = aws_lb_target_group.ga_tg_8009.arn
+  }
+  tags = {
+    Name = "Agent-${var.ENV}"
+  }
+}
+
+resource "aws_lb_target_group" "ga_tg_8009" {
+  name        = "ga-tg-${var.ENV}-8009"
+  port        = 8009
+  protocol    = "TCP"
+  target_type = "instance"
+  vpc_id      = data.aws_vpc.vpc.id
+  health_check {
+    port      = 8009
+    protocol  = "TCP"
+  }
+  tags = {
+    Name = "Agent-${var.ENV}"
+  }
+}
+
+resource "aws_lb_target_group_attachment" "ga_tga_8009" {
+  count            = local.count
+  target_group_arn = aws_lb_target_group.ga_tg_8009.arn
+  target_id        = aws_instance.app[count.index].id
+  port             = 8009
+}
+
 locals {
   count = upper(var.MFT_CLUSTER) == "TRUE" ? 2 : 1
 }
